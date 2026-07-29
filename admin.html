@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Sunno Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body { background:#f4f6f8; padding:15px; }
+    .box { background:white; padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid #ddd; }
+    input { width:100%; padding:10px; margin:5px 0 10px; border:1px solid #ccc; border-radius:4px; }
+    button { background:#1a252f; color:white; border:none; padding:10px 18px; border-radius:4px; cursor:pointer; font-weight:600; width:100%; }
+    table { width:100%; border-collapse:collapse; margin-top:15px; font-size:14px; }
+    th, td { border:1px solid #ddd; padding:8px; text-align:left; }
+    th { background:#1a252f; color:white; }
+    .table-container { overflow-x:auto; }
+  </style>
+</head>
+<body>
+
+  <h2>👨‍💼 Admin Dashboard</h2>
+  <br>
+
+  <!-- Product Add Form -->
+  <div class="box">
+    <h3>➕ Add New Product</h3>
+    <br>
+    <input type="text" id="pName" placeholder="Product Name (e.g. T-Shirt)">
+    <input type="number" id="pPrice" placeholder="Price (SAR)">
+    <input type="text" id="pCat" placeholder="Category">
+    <input type="number" id="pStock" placeholder="Stock Quantity">
+    <input type="text" id="pImg" placeholder="Image URL (Link)">
+    <button onclick="addProduct()">Save Product</button>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="box">
+    <h3>📦 Live Customer Orders</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer Info</th>
+            <th>Items Ordered</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTable">
+          <tr><td colspan="5">Loading orders...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // সার্ভার লাইভ হলে এখানে আপনার আসল API URL বসবে
+    const API_URL = 'http://localhost:5000/api';
+
+    async function addProduct() {
+      const name = document.getElementById('pName').value;
+      const price = document.getElementById('pPrice').value;
+      const category = document.getElementById('pCat').value;
+      const stock = document.getElementById('pStock').value;
+      const image = document.getElementById('pImg').value || 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300';
+
+      if(!name || !price) {
+        alert('Please fill product name and price!');
+        return;
+      }
+
+      await fetch(`${API_URL}/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, price: Number(price), category, stock: Number(stock), image })
+      });
+
+      alert('New Product Added Successfully!');
+      location.reload();
+    }
+
+    async function loadOrders() {
+      try {
+        const res = await fetch(`${API_URL}/orders`);
+        const orders = await res.json();
+        
+        const tbody = document.getElementById('ordersTable');
+        if(orders.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5">No orders found yet.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = orders.map(o => `
+          <tr>
+            <td>#${o._id.slice(-6)}</td>
+            <td><b>${o.customerName}</b><br>${o.phone}<br><small>${o.address}</small></td>
+            <td>${o.items.map(i => `${i.name} (x${i.qty})`).join(', ')}</td>
+            <td><b>SAR ${o.totalAmount}</b></td>
+            <td style="color:orange; font-weight:bold;">${o.status}</td>
+          </tr>
+        `).join('');
+      } catch(err) {
+        document.getElementById('ordersTable').innerHTML = '<tr><td colspan="5">Connecting to server...</td></tr>';
+      }
+    }
+
+    loadOrders();
+  </script>
+</body>
+</html>

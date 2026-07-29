@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sunno Store - Live Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body { background:#f4f6f8; padding:15px; }
+    header { background:#1a252f; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; border-radius:10px; margin-bottom:20px; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:15px; }
+    .card { background:white; padding:12px; border-radius:10px; border:1px solid #ddd; text-align:center; }
+    .card img { width:100%; height:110px; object-fit:contain; }
+    .btn { background:#28a745; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; margin-top:10px; font-weight:600; width:100%; }
+    .cart-box { background:white; padding:15px; border-radius:10px; margin-top:25px; border:1px solid #ddd; }
+    input { width:100%; padding:10px; margin:5px 0 12px; border:1px solid #ccc; border-radius:5px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>🛒 SUNNO STORE</h2>
+    <div>Cart: <b id="cartCount">0</b></div>
+  </header>
+
+  <h3>Products</h3>
+  <br>
+  <div class="grid" id="productContainer">Loading products...</div>
+
+  <div class="cart-box">
+    <h3>Order & Checkout</h3>
+    <div id="cartList" style="margin:10px 0;">Cart is empty.</div>
+    <h4>Total: SAR <span id="totalBill">0.00</span></h4>
+    
+    <hr style="margin:15px 0;">
+    <h4>Customer Info:</h4>
+    <input type="text" id="custName" placeholder="Your Full Name">
+    <input type="text" id="custPhone" placeholder="Mobile Number">
+    <input type="text" id="custAddress" placeholder="Delivery Address">
+    
+    <button class="btn" style="padding:12px; font-size:16px;" onclick="submitOrder()">Place Order</button>
+  </div>
+
+  <script>
+    // সার্ভার লাইভ হলে এখানে আপনার আসল API URL বসবে
+    const API_URL = 'http://localhost:5000/api';
+    let cart = [];
+
+    async function fetchProducts() {
+      try {
+        const res = await fetch(`${API_URL}/products`);
+        const products = await res.json();
+        const container = document.getElementById('productContainer');
+        
+        if(products.length === 0) {
+          container.innerHTML = '<p>No products available right now.</p>';
+          return;
+        }
+
+        container.innerHTML = products.map(p => `
+          <div class="card">
+            <img src="${p.image}" alt="${p.name}">
+            <h4 style="margin-top:5px;">${p.name}</h4>
+            <p style="color:#28a745; font-weight:bold;">SAR ${p.price}</p>
+            <small>Stock: ${p.stock}</small>
+            <button class="btn" onclick="addToCart('${p._id}', '${p.name}', ${p.price})">Add to Cart</button>
+          </div>
+        `).join('');
+      } catch(err) {
+        document.getElementById('productContainer').innerHTML = 'Connecting to server...';
+      }
+    }
+
+    function addToCart(id, name, price) {
+      const item = cart.find(i => i.id === id);
+      if(item) item.qty++;
+      else cart.push({ id, name, price, qty: 1 });
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
+      let total = 0;
+      const list = document.getElementById('cartList');
+      
+      if(cart.length === 0) {
+        list.innerHTML = 'Cart is empty.';
+      } else {
+        list.innerHTML = cart.map(i => {
+          total += i.price * i.qty;
+          return `<div><b>${i.name}</b> x ${i.qty} - SAR ${(i.price * i.qty).toFixed(2)}</div>`;
+        }).join('');
+      }
+      document.getElementById('totalBill').innerText = total.toFixed(2);
+    }
+
+    async function submitOrder() {
+      const name = document.getElementById('custName').value;
+      const phone = document.getElementById('custPhone').value;
+      const address = document.getElementById('custAddress').value;
+
+      if(!name || !phone || cart.length === 0) {
+        alert('Please fill out name, phone and add items to cart!');
+        return;
+      }
+
+      const totalAmount = parseFloat(document.getElementById('totalBill').innerText);
+
+      const response = await fetch(`${API_URL}/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: name,
+          phone: phone,
+          address: address,
+          items: cart,
+          totalAmount: totalAmount
+        })
+      });
+
+      const data = await response.json();
+      if(data.success) {
+        alert('🎉 Order Placed Successfully! Order ID: ' + data.orderId);
+        cart = [];
+        updateCartUI();
+        fetchProducts();
+      }
+    }
+
+    fetchProducts();
+  </script>
+</body>
+</html>
