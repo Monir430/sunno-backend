@@ -56,6 +56,13 @@
   </div>
 
   <script>
+    // পাসওয়ার্ড চেক কোড
+const password = prompt("Enter Admin Password:");
+if (password !== "shanta") { 
+    alert("Wrong Password!");
+    window.location.href = "index.html";
+}
+
     // সার্ভার লাইভ হলে এখানে আপনার আসল API URL বসবে
     const API_URL = 'https://sunno-backend.onrender.com/api';
 
