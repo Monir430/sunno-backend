@@ -22,7 +22,6 @@
     .search-box input { width:100%; padding:10px 12px 10px 35px; border:1px solid #e2e8f0; border-radius:8px; font-size:13px; background:#f1f5f9; outline:none; }
     .search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; color:#94a3b8; }
     
-    /* Category Scroll */
     .cat-scroll { display:flex; gap:8px; padding:12px 15px; overflow-x:auto; white-space:nowrap; background:#fff; margin-bottom:12px; border-bottom:1px solid #edf2f7; }
     .cat-scroll::-webkit-scrollbar { display:none; }
     .cat-pill { padding:6px 14px; background:#f1f5f9; border-radius:20px; font-size:12px; font-weight:500; color:#475569; cursor:pointer; }
@@ -40,7 +39,6 @@
     .p-price { font-size:13px; font-weight:700; color:#00875a; margin:5px 0; }
     .add-btn { background:#00875a; color:#fff; border:none; padding:6px; border-radius:6px; font-weight:600; font-size:12px; cursor:pointer; width:100%; transition:0.2s; }
 
-    /* Account Modal Popup */
     .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center; }
     .modal-card { background:#fff; width:90%; max-width:350px; border-radius:12px; padding:20px; position:relative; }
     .close-modal { position:absolute; right:15px; top:12px; font-size:18px; cursor:pointer; color:#64748b; }
@@ -54,14 +52,8 @@
   <header>
     <div class="nav-top">
       <div class="logo">🛒 SUNNO STORE</div>
-      
       <div class="header-actions">
-        <!-- Account / Login Button -->
-        <div class="login-btn" id="userAccountBtn">
-          👤 Login
-        </div>
-        
-        <!-- Cart Button -->
+        <div class="login-btn" id="userAccountBtn">👤 Login</div>
         <div class="cart-btn" onclick="window.location.href='cart.html'">
           🛒 Cart <span class="cart-badge" id="cartCount">0</span>
         </div>
@@ -74,14 +66,13 @@
     </div>
   </header>
 
-  <!-- Categories -->
   <div class="cat-scroll" id="categoryContainer">
     <div class="cat-pill active" onclick="filterCategory('All', this)">All</div>
   </div>
 
   <div class="main-container">
     
-    <!-- Order Track Box -->
+    <!-- Track Box -->
     <div class="track-box">
       <h4 style="color:#0369a1; font-size:13px; margin-bottom:6px;">📍 Track Your Order Status</h4>
       <div style="display:flex; gap:8px;">
@@ -91,23 +82,19 @@
       <div id="trackResult" style="margin-top:8px; font-size:12px;"></div>
     </div>
 
-    <!-- Products List Header -->
     <h3 style="color:#1e293b; font-size:15px; margin-top:10px;">Featured Products</h3>
     <div class="product-grid" id="productContainer">Loading products...</div>
 
   </div>
 
-  <!-- Account Info Modal -->
   <div class="modal-overlay" id="accountModal">
     <div class="modal-card">
       <span class="close-modal" onclick="closeAccountModal()">&times;</span>
       <h3 style="color:#00875a; margin-bottom:12px; font-size:16px;">👤 Account Details</h3>
-      
       <div class="info-item"><b>Name:</b> <span id="accName"></span></div>
       <div class="info-item"><b>Gmail:</b> <span id="accEmail"></span></div>
       <div class="info-item"><b>Mobile:</b> <span id="accPhone"></span></div>
       <div class="info-item"><b>Facebook:</b> <span id="accFb"></span></div>
-
       <button class="logout-btn" onclick="logoutUser()">Logout</button>
     </div>
   </div>
@@ -116,7 +103,7 @@
     const API_URL = 'https://sunno-backend.onrender.com';
     let allProducts = [];
 
-    // ১. ডাটাবেস থেকে প্রোডাক্ট লোড করা
+    // ১. প্রোডাক্ট লোড
     async function fetchProducts() {
       try {
         const res = await fetch(`${API_URL}/api/products`);
@@ -128,7 +115,7 @@
           document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center;">Failed to load products.</p>';
         }
       } catch (err) {
-        document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#ef4444;">Connecting to server...</p>';
+        document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#ef4444;">Connecting to server (Render waking up...)</p>';
       }
     }
 
@@ -141,7 +128,7 @@
       `).join('');
     }
 
-    // ৩. গ্রিডে প্রোডাক্ট রেন্ডার
+    // ৩. প্রোডাক্ট রেন্ডার
     function renderProducts(list) {
       const container = document.getElementById('productContainer');
       if (!list || list.length === 0) {
@@ -206,7 +193,7 @@
       if (cartCountEl) cartCountEl.innerText = totalCount;
     }
 
-    // ৬. অ্যাকাউন্ট মেথড
+    // ৬. অ্যাকাউন্ট হ্যান্ডলিং
     function checkUserLogin() {
       const user = JSON.parse(localStorage.getItem('sunno_user'));
       const accountBtn = document.getElementById('userAccountBtn');
@@ -238,7 +225,7 @@
       location.reload();
     }
 
-    // 🔴 ৭. মাল্টি-ফিল্ড ম্যাচিং সমাধানসহ সম্পূর্ণ নতুন ট্র্যাকিং ফাংশন
+    // 🔴 ৭. Render Sleep Mode ও Multi-field ম্যাচিং হ্যান্ডলিং ট্র্যাকিং
     async function trackOrder() {
       const phoneInput = document.getElementById('trackPhone').value.trim();
       const resEl = document.getElementById('trackResult');
@@ -248,25 +235,22 @@
         return;
       }
 
-      resEl.innerHTML = '<span style="color:#0284c7;">Searching orders from server...</span>';
+      // Render জাগানোর মেসেজ
+      resEl.innerHTML = '<span style="color:#0284c7;">Searching backend... (If server is asleep, may take ~30s)</span>';
       
       try {
         const res = await fetch(`${API_URL}/api/orders`);
         if (!res.ok) throw new Error('Backend response error');
         
         const allOrders = await res.json();
-        
-        // সব নন-ডিজিট ক্যারেক্টার ছেঁটে ফেলা
         const cleanInput = phoneInput.replace(/\D/g, ''); 
 
         const userOrders = allOrders.filter(o => {
-          // ব্যাকএন্ডের সম্ভাব্য সব ফিল্ডের নাম চেক
-          const dbPhoneRaw = o.phone || o.customerPhone || o.mobile || o.phoneNumber || '';
-          const cleanDBPhone = dbPhoneRaw.toString().replace(/\D/g, '');
+          // ব্যাকএন্ডের সম্ভাব্য সব ফোন নম্বরের অবজেক্ট ও ফিল্ড নাম কভার করা
+          const rawPhone = o.phone || o.customerPhone || o.mobile || o.phoneNumber || (o.user && o.user.phone) || '';
+          const cleanDBPhone = rawPhone.toString().replace(/\D/g, '');
           
           if (!cleanDBPhone) return false;
-
-          // ডিজিট সাবস্ট্রিং দিয়ে নমনীয় ম্যাচিং
           return cleanDBPhone.includes(cleanInput) || cleanInput.includes(cleanDBPhone);
         });
 
@@ -277,12 +261,12 @@
             <div style="background:#f0f9ff; padding:10px; border-radius:6px; margin-top:6px; border:1px solid #bae6fd; text-align:left;">
               <b>Order ID: #${o._id ? o._id.slice(-6) : 'N/A'}</b><br>
               Status: <span style="color:#0284c7; font-weight:bold;">${o.status || 'Pending'}</span><br>
-              <small>Total Amount: SAR ${o.totalAmount || o.total || 0}</small>
+              <small>Total: SAR ${o.totalAmount || o.total || 0}</small>
             </div>
           `).join('');
         }
       } catch (err) {
-        resEl.innerHTML = '<span style="color:#ef4444;">Could not fetch tracking status. Try again later.</span>';
+        resEl.innerHTML = '<span style="color:#ef4444;">Server error/timeout. Please try pressing Check again in 10 seconds.</span>';
       }
     }
 
