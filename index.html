@@ -35,7 +35,7 @@
     @media (min-width: 600px) { .product-grid { grid-template-columns:repeat(4, 1fr); } }
     
     .p-card { background:#fff; border-radius:10px; padding:10px; border:1px solid #edf2f7; display:flex; flex-direction:column; justify-content:space-between; text-align:center; position:relative; }
-    .p-card img { width:100%; height:110px; object-fit:contain; margin-bottom:8px; }
+    .p-card img { width:100%; height:110px; object-fit:contain; margin-bottom:8px; border-radius:6px; }
     .p-title { font-size:12px; font-weight:600; color:#1e293b; line-height:1.3; height:32px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
     .p-price { font-size:13px; font-weight:700; color:#00875a; margin:5px 0; }
     .add-btn { background:#00875a; color:#fff; border:none; padding:6px; border-radius:6px; font-weight:600; font-size:12px; cursor:pointer; width:100%; transition:0.2s; }
@@ -44,7 +44,7 @@
     .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center; }
     .modal-card { background:#fff; width:90%; max-width:350px; border-radius:12px; padding:20px; position:relative; }
     .close-modal { position:absolute; right:15px; top:12px; font-size:18px; cursor:pointer; color:#64748b; }
-    .info-item { margin-bottom:10px; font-size:13px; color:#334155; }
+    .info-item { margin-bottom:10px; font-size:13px; color:#334155; word-break: break-all; }
     .info-item b { color:#0f172a; }
     .logout-btn { background:#ef4444; color:#fff; border:none; width:100%; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:600; font-size:12px; }
   </style>
@@ -116,7 +116,7 @@
     const API_URL = 'https://sunno-backend.onrender.com';
     let allProducts = [];
 
-    // ১. প্রোডাক্ট লোড করা
+    // ১. ডাটাবেস থেকে প্রোডাক্ট লোড করা
     async function fetchProducts() {
       try {
         const res = await fetch(`${API_URL}/api/products`);
@@ -132,6 +132,7 @@
       }
     }
 
+    // ২. ক্যাটাগরি রেন্ডার
     function renderCategories() {
       const categories = ['All', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
       const container = document.getElementById('categoryContainer');
@@ -140,6 +141,7 @@
       `).join('');
     }
 
+    // ৩. গ্রিডে প্রোডাক্ট রেন্ডার (ছবি ভেঙে যাওয়ার সমাধান সহ)
     function renderProducts(list) {
       const container = document.getElementById('productContainer');
       if (!list || list.length === 0) {
@@ -147,18 +149,26 @@
         return;
       }
 
-      container.innerHTML = list.map(p => `
-        <div class="p-card">
-          <img src="${p.image || 'https://via.placeholder.com/150'}" alt="${p.name}">
-          <div>
-            <div class="p-title">${p.name}</div>
-            <div class="p-price">SAR ${p.price}</div>
+      container.innerHTML = list.map(p => {
+        // ছবি বৈধ আছে কিনা চেক
+        const imgSrc = (p.image && p.image.startsWith('http')) 
+          ? p.image 
+          : 'https://via.placeholder.com/150?text=No+Image';
+
+        return `
+          <div class="p-card">
+            <img src="${imgSrc}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+            <div>
+              <div class="p-title">${p.name}</div>
+              <div class="p-price">SAR ${p.price}</div>
+            </div>
+            <button class="add-btn" onclick="addToCart('${p._id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${imgSrc}')">+ Add</button>
           </div>
-          <button class="add-btn" onclick="addToCart('${p._id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${p.image || ''}')">+ Add</button>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
+    // ৪. ক্যাটাগরি ফিল্টার
     function filterCategory(cat, el) {
       if (el) {
         document.querySelectorAll('.cat-pill').forEach(e => e.classList.remove('active'));
@@ -168,11 +178,13 @@
       else renderProducts(allProducts.filter(p => p.category === cat));
     }
 
+    // ৫. সার্চ ফিল্টার
     function filterProducts() {
       const q = document.getElementById('searchInput').value.toLowerCase();
       renderProducts(allProducts.filter(p => p.name.toLowerCase().includes(q)));
     }
 
+    // ৬. কার্টে অ্যাড করা
     function addToCart(id, name, price, image) {
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
       const item = cart.find(i => i.id === id);
@@ -189,6 +201,7 @@
       setTimeout(() => { btn.innerText = oldText; btn.style.background = '#00875a'; }, 1000);
     }
 
+    // ৭. কার্ট সংখ্যা আপডেট
     function updateCartCount() {
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
       const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -196,7 +209,7 @@
       if (cartCountEl) cartCountEl.innerText = totalCount;
     }
 
-    // ২. ইউজার লগইন চেক এবং পপ-আপ ইনফো
+    // ৮. ইউজার লগইন চেক ও অ্যাকাউন্ট পপ-আপ
     function checkUserLogin() {
       const user = JSON.parse(localStorage.getItem('sunno_user'));
       const accountBtn = document.getElementById('userAccountBtn');
@@ -232,7 +245,7 @@
       location.reload();
     }
 
-    // ৩. সম্পূর্ণ ফিক্স করা অর্ডার ট্র্যাকিং ফাংশন
+    // ৯. নম্বর দিয়ে নির্ভুল অর্ডার ট্র্যাকিং (ম্যাচিং ফিক্স সহ)
     async function trackOrder() {
       const phoneInput = document.getElementById('trackPhone').value.trim();
       const resEl = document.getElementById('trackResult');
@@ -245,49 +258,39 @@
       resEl.innerHTML = 'Searching orders...';
       
       try {
-        // মেথড ১: ব্যাকএন্ড ট্র্যাকিং API দিয়ে ফেচ
-        const res = await fetch(`${API_URL}/api/orders/track/${phoneInput}`);
+        const res = await fetch(`${API_URL}/api/orders`);
+        if (!res.ok) throw new Error('Network error');
         
-        if (res.ok) {
-          const orders = await res.json();
-          if (orders && orders.length > 0) {
-            displayTrackResults(orders, resEl);
-            return;
-          }
-        }
+        const allOrders = await res.json();
         
-        // মেথড ২ (ব্যাকআপ): সব অর্ডার এনে নম্বর দিয়ে ফিল্টার করা
-        const fallbackRes = await fetch(`${API_URL}/api/orders`);
-        if (!fallbackRes.ok) throw new Error('Failed to connect');
-        
-        const allOrders = await fallbackRes.json();
-        const userOrders = allOrders.filter(o => 
-          o.phone && o.phone.toString().trim().includes(phoneInput)
-        );
+        // শুধু সংখ্যাটুকু রেখে চেক করার জন্য
+        const cleanInput = phoneInput.replace(/\D/g, ''); 
+
+        const userOrders = allOrders.filter(o => {
+          if (!o.phone) return false;
+          const cleanDBPhone = o.phone.toString().replace(/\D/g, '');
+          
+          // ইনপুট বা ডাটাবেসের নম্বরের মিল চেক করা
+          return cleanDBPhone.includes(cleanInput) || cleanInput.includes(cleanDBPhone);
+        });
 
         if (userOrders.length === 0) {
           resEl.innerHTML = '<span style="color:#ef4444;">No orders found with this number.</span>';
         } else {
-          displayTrackResults(userOrders, resEl);
+          resEl.innerHTML = userOrders.map(o => `
+            <div style="background:#f0f9ff; padding:10px; border-radius:6px; margin-top:6px; border:1px solid #bae6fd;">
+              <b>Order ID: #${o._id ? o._id.slice(-6) : 'N/A'}</b><br>
+              Status: <span style="color:#0284c7; font-weight:bold;">${o.status || 'Pending'}</span><br>
+              <small>Total Amount: SAR ${o.totalAmount || 0}</small>
+            </div>
+          `).join('');
         }
-
       } catch (err) {
-        resEl.innerHTML = '<span style="color:#ef4444;">Could not fetch tracking status. Try again.</span>';
+        resEl.innerHTML = '<span style="color:#ef4444;">Could not fetch tracking status. Try again later.</span>';
       }
     }
 
-    // ট্র্যাকিং রেজাল্ট দেখানোর হেল্পার ফাংশন
-    function displayTrackResults(orders, element) {
-      element.innerHTML = orders.map(o => `
-        <div style="background:#f0f9ff; padding:10px; border-radius:6px; margin-top:6px; border:1px solid #bae6fd;">
-          <b>Order ID: #${o._id ? o._id.slice(-6) : 'N/A'}</b><br>
-          Status: <span style="color:#0284c7; font-weight:bold;">${o.status || 'Pending'}</span><br>
-          <small>Total Amount: SAR ${o.totalAmount || 0}</small>
-        </div>
-      `).join('');
-    }
-
-    // পেজ লোড হলে রান হবে
+    // পেজ লোড হলে কল হবে
     fetchProducts();
     updateCartCount();
     checkUserLogin();
