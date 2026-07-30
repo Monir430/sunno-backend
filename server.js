@@ -7,7 +7,8 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB ডাটাবেস কানেকশন
-const mongoURI = process.env.MONGO_URI || 'YOUR_MONGODB_CONNECTION_STRING_HERE';
+const mongoURI = process.env.MONGO_URI || 'mongodb+srv://mdmonirkhan43000_db_user:j6pIQCZRddpHl0NU@cluster0.khyj9l0.mongodb.net/sunno_store?retryWrites=true&w=majority';
+
 
 mongoose.connect(mongoURI)
   .then(() => console.log('MongoDB Database Connected Successfully!'))
