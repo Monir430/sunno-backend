@@ -57,15 +57,14 @@
 
   <script>
     // পাসওয়ার্ড চেক কোড
-const password = prompt("Enter Admin Password:");
-if (password !== "shanta") { 
-    alert("Wrong Password!");
-    window.location.href = "index.html";
-}
+    const password = prompt("Enter Admin Password:");
+    if (password !== "shanta") { 
+        alert("Wrong Password!");
+        window.location.href = "index.html";
+    }
 
-    // সার্ভার লাইভ হলে এখানে আপনার আসল API URL বসবে
+    // ব্যাকএন্ডের মূল API URL
     const API_URL = 'https://sunno-backend.onrender.com';
-
 
     async function addProduct() {
       const name = document.getElementById('pName').value;
@@ -79,34 +78,42 @@ if (password !== "shanta") {
         return;
       }
 
-      await fetch(`${API_URL}/products`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, price: Number(price), category, stock: Number(stock), image })
-      });
+      try {
+        const res = await fetch(`${API_URL}/api/products`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, price: Number(price), category, stock: Number(stock), image })
+        });
 
-      alert('New Product Added Successfully!');
-      location.reload();
+        if(res.ok) {
+          alert('New Product Added Successfully!');
+          location.reload();
+        } else {
+          alert('Failed to add product.');
+        }
+      } catch(err) {
+        alert('Error connecting to server.');
+      }
     }
 
     async function loadOrders() {
       try {
-        const res = await fetch(`${API_URL}/orders`);
+        const res = await fetch(`${API_URL}/api/orders`);
         const orders = await res.json();
         
         const tbody = document.getElementById('ordersTable');
-        if(orders.length === 0) {
+        if(!orders || orders.length === 0) {
           tbody.innerHTML = '<tr><td colspan="5">No orders found yet.</td></tr>';
           return;
         }
 
         tbody.innerHTML = orders.map(o => `
           <tr>
-            <td>#${o._id.slice(-6)}</td>
-            <td><b>${o.customerName}</b><br>${o.phone}<br><small>${o.address}</small></td>
-            <td>${o.items.map(i => `${i.name} (x${i.qty})`).join(', ')}</td>
-            <td><b>SAR ${o.totalAmount}</b></td>
-            <td style="color:orange; font-weight:bold;">${o.status}</td>
+            <td>#${o._id ? o._id.slice(-6) : 'N/A'}</td>
+            <td><b>${o.customerName || 'N/A'}</b><br>${o.phone || ''}<br><small>${o.address || ''}</small></td>
+            <td>${o.items ? o.items.map(i => `${i.name} (x${i.qty})`).join(', ') : ''}</td>
+            <td><b>SAR ${o.totalAmount || 0}</b></td>
+            <td style="color:orange; font-weight:bold;">${o.status || 'Pending'}</td>
           </tr>
         `).join('');
       } catch(err) {

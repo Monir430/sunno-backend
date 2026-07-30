@@ -43,33 +43,33 @@
   </div>
 
   <script>
-    // সার্ভার লাইভ হলে এখানে আপনার আসল API URL বসবে
+    // ব্যাকএন্ডের মূল API URL
     const API_URL = 'https://sunno-backend.onrender.com';
 
     let cart = [];
 
     async function fetchProducts() {
       try {
-        const res = await fetch(`${API_URL}/products`);
+        const res = await fetch(`${API_URL}/api/products`);
         const products = await res.json();
         const container = document.getElementById('productContainer');
         
-        if(products.length === 0) {
+        if(!products || products.length === 0) {
           container.innerHTML = '<p>No products available right now.</p>';
           return;
         }
 
         container.innerHTML = products.map(p => `
           <div class="card">
-            <img src="${p.image}" alt="${p.name}">
+            <img src="${p.image || 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300'}" alt="${p.name}">
             <h4 style="margin-top:5px;">${p.name}</h4>
             <p style="color:#28a745; font-weight:bold;">SAR ${p.price}</p>
-            <small>Stock: ${p.stock}</small>
+            <small>Stock: ${p.stock || 0}</small>
             <button class="btn" onclick="addToCart('${p._id}', '${p.name}', ${p.price})">Add to Cart</button>
           </div>
         `).join('');
       } catch(err) {
-        document.getElementById('productContainer').innerHTML = 'Connecting to server...';
+        document.getElementById('productContainer').innerHTML = '<p>Connecting to server...</p>';
       }
     }
 
@@ -108,24 +108,33 @@
 
       const totalAmount = parseFloat(document.getElementById('totalBill').innerText);
 
-      const response = await fetch(`${API_URL}/orders`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customerName: name,
-          phone: phone,
-          address: address,
-          items: cart,
-          totalAmount: totalAmount
-        })
-      });
+      try {
+        const response = await fetch(`${API_URL}/api/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customerName: name,
+            phone: phone,
+            address: address,
+            items: cart,
+            totalAmount: totalAmount
+          })
+        });
 
-      const data = await response.json();
-      if(data.success) {
-        alert('🎉 Order Placed Successfully! Order ID: ' + data.orderId);
-        cart = [];
-        updateCartUI();
-        fetchProducts();
+        const data = await response.json();
+        if(response.ok) {
+          alert('🎉 Order Placed Successfully!');
+          cart = [];
+          document.getElementById('custName').value = '';
+          document.getElementById('custPhone').value = '';
+          document.getElementById('custAddress').value = '';
+          updateCartUI();
+          fetchProducts();
+        } else {
+          alert('Failed to place order. Please try again.');
+        }
+      } catch(err) {
+        alert('Server Error. Please try again later.');
       }
     }
 
