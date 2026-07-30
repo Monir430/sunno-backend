@@ -268,5 +268,152 @@
     updateCartCount();
     checkUserLogin();
   </script>
+    <!-- 📌 FOOTER SECTION -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      
+      <!-- ব্র্যান্ড লোগো ও ইনফো -->
+      <div class="footer-brand">
+        <h2 class="footer-logo">🛒 SUNNO STORE</h2>
+        <p><strong>Address:</strong> Mahim ganguly road, Mina bazar, Tan bazar, Narayanganj, Dhaka, Bangladesh</p>
+        <p><strong>Email:</strong> info@sunnostore.com</p>
+        <p><strong>Phone:</strong> (+880) 1896063801</p>
+        <a href="#" class="direction-link">Get direction ↗</a>
+      </div>
+
+      <!-- সোশ্যাল মিডিয়া আইকন -->
+      <div class="social-icons">
+        <a href="#" class="s-icon">f</a>
+        <a href="#" class="s-icon">𝕏</a>
+        <a href="#" class="s-icon">📷</a>
+        <a href="#" class="s-icon">🎵</a>
+        <a href="#" class="s-icon">📌</a>
+      </div>
+
+      <!-- অ্যাকর্ডিয়ন / লিঙ্ক সেকশন -->
+      <div class="footer-links">
+        <div class="footer-accordion">
+          <span>Help</span>
+          <span>+</span>
+        </div>
+        <div class="footer-accordion">
+          <span>Useful Links</span>
+          <span>+</span>
+        </div>
+        <div class="footer-accordion">
+          <span>Sign Up for Email</span>
+          <span>+</span>
+        </div>
+      </div>
+
+      <!-- কপিরাইট ও পেমেন্ট মেথড -->
+      <div class="footer-bottom">
+        <p>© Sunno Store. All Rights Reserved</p>
+        <div class="payment-badges">
+          <span class="pay-card visa">VISA</span>
+          <span class="pay-card paypal">PayPal</span>
+          <span class="pay-card mc">MasterCard</span>
+          <span class="pay-card amex">AMEX</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- 📱 BOTTOM MOBILE NAVIGATION BAR -->
+  <div class="mobile-bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <span class="nav-icon">⊞</span>
+      <span class="nav-label">Shop</span>
+    </a>
+    <a href="#productContainer" class="nav-item">
+      <span class="nav-icon">🎛️</span>
+      <span class="nav-label">Filter</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">♡</span>
+      <span class="nav-badge">0</span>
+      <span class="nav-label">Wishlist</span>
+    </a>
+    <a href="cart.html" class="nav-item">
+      <span class="nav-icon">🛍️</span>
+      <span class="nav-badge" id="bottomCartCount">0</span>
+      <span class="nav-label">Cart</span>
+    </a>
+    <a href="login.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Account</span>
+    </a>
+  </div>
+
+  <!-- 🎨 FOOTER & BOTTOM NAV STYLES -->
+  <style>
+    body { padding-bottom: 70px; } /* বটম বার যাতে কনটেন্ট ঢেকে না ফেলে */
+
+    /* Footer Styles */
+    .site-footer {
+      background: #ffffff;
+      padding: 30px 20px 20px 20px;
+      border-top: 1px solid #e2e8f0;
+      color: #334155;
+      font-size: 13px;
+      margin-top: 40px;
+    }
+    .footer-container { max-width: 600px; margin: 0 auto; }
+    .footer-logo { font-weight: 800; font-size: 22px; color: #00875a; margin-bottom: 12px; letter-spacing: 1px; }
+    .footer-brand p { margin-bottom: 6px; color: #475569; line-height: 1.5; }
+    .direction-link { display: inline-block; color: #0f172a; font-weight: 600; text-decoration: underline; margin-top: 6px; margin-bottom: 20px; }
+    
+    /* Social Icons */
+    .social-icons { display: flex; gap: 10px; margin-bottom: 25px; }
+    .s-icon {
+      width: 36px; height: 36px; border-radius: 50%; border: 1px solid #cbd5e1;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; color: #0f172a; font-weight: bold; font-size: 14px;
+      transition: 0.2s;
+    }
+    .s-icon:hover { background: #00875a; color: #fff; border-color: #00875a; }
+
+    /* Accordions */
+    .footer-accordion {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0; border-top: 1px solid #f1f5f9; font-weight: 600; font-size: 14px; color: #1e293b; cursor: pointer;
+    }
+    .footer-accordion:last-child { border-bottom: 1px solid #f1f5f9; }
+
+    /* Footer Bottom */
+    .footer-bottom { text-align: center; margin-top: 25px; padding-top: 15px; }
+    .footer-bottom p { color: #94a3b8; font-size: 11px; margin-bottom: 15px; }
+    
+    /* Payment Badges */
+    .payment-badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .pay-card {
+      padding: 4px 10px; border-radius: 4px; font-weight: 700; font-size: 10px; border: 1px solid #e2e8f0; background: #f8fafc;
+    }
+    .visa { color: #1a1f71; }
+    .paypal { color: #003087; }
+    .mc { color: #eb001b; }
+    .amex { color: #006fcf; }
+
+    /* Mobile Bottom Navigation Bar */
+    .mobile-bottom-nav {
+      position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff;
+      display: flex; justify-content: space-around; align-items: center;
+      padding: 8px 0; border-top: 1px solid #e2e8f0; z-index: 1000;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; text-decoration: none;
+      color: #64748b; font-size: 10px; font-weight: 500; position: relative; width: 20%;
+    }
+    .nav-item.active { color: #00875a; font-weight: 700; }
+    .nav-icon { font-size: 18px; margin-bottom: 2px; }
+    .nav-badge {
+      position: absolute; top: -2px; right: 22px; background: #ef4444; color: white;
+      font-size: 9px; font-weight: bold; border-radius: 50%; width: 14px; height: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+  </style>
+
 </body>
 </html>
