@@ -13,6 +13,8 @@
     .nav-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
     .logo { font-size:18px; font-weight:700; color:#00875a; display:flex; align-items:center; gap:5px; }
     
+    .header-actions { display:flex; gap:8px; align-items:center; }
+    .login-btn { background:#f1f5f9; color:#334155; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; text-decoration:none; display:flex; align-items:center; gap:4px; border:1px solid #cbd5e1; }
     .cart-btn { background:#00875a; color:#fff; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; }
     .cart-badge { background:#fff; color:#00875a; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:bold; }
     
@@ -48,10 +50,20 @@
   <header>
     <div class="nav-top">
       <div class="logo">🛒 SUNNO STORE</div>
-      <div class="cart-btn" onclick="window.location.href='cart.html'">
-        🛒 Cart <span class="cart-badge" id="cartCount">0</span>
+      
+      <div class="header-actions">
+        <!-- Login Button -->
+        <div class="login-btn" id="userAccountBtn" onclick="window.location.href='login.html'">
+          👤 Login
+        </div>
+        
+        <!-- Cart Button -->
+        <div class="cart-btn" onclick="window.location.href='cart.html'">
+          🛒 Cart <span class="cart-badge" id="cartCount">0</span>
+        </div>
       </div>
     </div>
+
     <div class="search-box">
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Search products...">
@@ -94,10 +106,10 @@
           renderCategories();
           renderProducts(allProducts);
         } else {
-          document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1;">Failed to load products.</p>';
+          document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center;">Failed to load products.</p>';
         }
       } catch (err) {
-        document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1;">Connecting to server...</p>';
+        document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center;">Connecting to server...</p>';
       }
     }
 
@@ -120,7 +132,7 @@
 
       container.innerHTML = list.map(p => `
         <div class="p-card">
-          <img src="${p.image || 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300'}" alt="${p.name}">
+          <img src="${p.image || 'https://via.placeholder.com/150'}" alt="${p.name}">
           <div>
             <div class="p-title">${p.name}</div>
             <div class="p-price">SAR ${p.price}</div>
@@ -158,7 +170,6 @@
       localStorage.setItem('sunno_cart', JSON.stringify(cart));
       updateCartCount();
       
-      // ছোট অ্যালার্ট মেসেজ
       const btn = event.target;
       const oldText = btn.innerText;
       btn.innerText = '✓ Added';
@@ -177,7 +188,16 @@
       if (cartCountEl) cartCountEl.innerText = totalCount;
     }
 
-    // ৮. অর্ডার ট্র্যাকিং
+    // ৮. ইউজার লগইন অবস্থা চেক করা
+    function checkUserLogin() {
+      const user = JSON.parse(localStorage.getItem('sunno_user'));
+      const accountBtn = document.getElementById('userAccountBtn');
+      if (user && user.name && accountBtn) {
+        accountBtn.innerText = `👤 ${user.name}`;
+      }
+    }
+
+    // ৯. অর্ডার ট্র্যাকিং
     async function trackOrder() {
       const phone = document.getElementById('trackPhone').value;
       const resEl = document.getElementById('trackResult');
@@ -200,9 +220,10 @@
       } catch(err) { resEl.innerHTML = '<span style="color:#ef4444;">Error fetching status.</span>'; }
     }
 
-    // পেজ লোড হলে কল হবে
+    // পেজ লোড হলে রান হবে
     fetchProducts();
     updateCartCount();
+    checkUserLogin();
   </script>
 </body>
 </html>
