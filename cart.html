@@ -3,118 +3,191 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Cart - Sunno Store</title>
+  <title>Shopping Cart - Sunno Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-    body { background:#f8f9fa; color:#333; padding-bottom:100px; }
-    header { background:#fff; padding:15px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
-    .back-btn { text-decoration:none; color:#00875a; font-weight:600; font-size:14px; }
-    .cart-header { display:flex; justify-content:space-between; align-items:center; margin:20px 15px 10px; }
-    .clear-btn { background:none; border:1px solid #00875a; color:#00875a; padding:6px 14px; border-radius:20px; font-weight:600; cursor:pointer; }
+    body { background:#f8f9fa; color:#333; padding:15px; max-width:600px; margin:0 auto; }
     
-    .cart-card { background:#fff; margin:10px 15px; padding:12px; border-radius:12px; border:1px solid #edf2f7; display:flex; gap:12px; align-items:center; }
-    .cart-card img { width:70px; height:70px; object-fit:contain; }
-    .cart-info { flex:1; }
-    .cart-title { font-size:13px; font-weight:600; color:#1e293b; margin-bottom:4px; }
-    .cart-price { font-size:14px; font-weight:700; color:#00875a; }
+    .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
+    .back-btn { background:#e2e8f0; color:#334155; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; text-decoration:none; }
     
-    .qty-controls { display:flex; align-items:center; gap:10px; margin-top:8px; }
-    .qty-btn { background:#f1f5f9; border:1px solid #cbd5e1; width:28px; height:28px; border-radius:6px; font-weight:bold; cursor:pointer; }
-    .del-btn { background:#fee2e2; border:none; color:#dc2626; padding:6px 10px; border-radius:6px; cursor:pointer; margin-left:auto; }
-
-    .bottom-checkout { position:fixed; bottom:0; left:0; right:0; background:#fff; padding:15px; box-shadow:0 -4px 10px rgba(0,0,0,0.05); }
-    .checkout-btn { background:#00875a; color:#fff; border:none; width:100%; padding:14px; border-radius:10px; font-weight:bold; font-size:15px; cursor:pointer; }
+    .cart-card { background:#fff; border-radius:10px; padding:15px; border:1px solid #edf2f7; margin-bottom:15px; }
+    .cart-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #f1f5f9; }
+    .cart-item img { width:50px; height:50px; object-fit:contain; border-radius:6px; }
+    .item-details { flex:1; }
+    .item-title { font-size:13px; font-weight:600; color:#1e293b; }
+    .item-price { font-size:12px; color:#00875a; font-weight:700; }
+    
+    .qty-controls { display:flex; align-items:center; gap:8px; }
+    .qty-btn { background:#f1f5f9; border:1px solid #cbd5e1; width:24px; height:24px; border-radius:4px; font-weight:bold; cursor:pointer; }
+    
+    .checkout-box { background:#fff; padding:15px; border-radius:10px; border:1px solid #edf2f7; }
+    .input-group { margin-bottom:10px; }
+    .input-group label { display:block; font-size:11px; font-weight:600; color:#64748b; margin-bottom:3px; }
+    .input-group input { width:100%; padding:9px; border:1px solid #cbd5e1; border-radius:6px; font-size:12px; outline:none; }
+    .input-group input:focus { border-color:#00875a; }
+    
+    .total-box { display:flex; justify-content:space-between; font-size:15px; font-weight:700; margin:15px 0; color:#0f172a; }
+    .submit-btn { background:#00875a; color:#fff; border:none; width:100%; padding:12px; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer; }
+    .submit-btn:disabled { background:#cbd5e1; cursor:not-allowed; }
   </style>
 </head>
 <body>
 
-  <header>
-    <a href="index.html" class="back-btn">❮ Continue Shopping</a>
-    <h3 style="font-size:16px;">My Cart</h3>
-  </header>
-
-  <div class="cart-header">
-    <h4>Items in Cart (<span id="totalItems">0</span>)</h4>
-    <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+  <div class="header">
+    <a href="index.html" class="back-btn">⬅ Back to Shop</a>
+    <h3 style="font-size:16px; color:#00875a;">🛒 Your Cart</h3>
   </div>
 
-  <div id="cartItemsContainer">Loading Cart...</div>
+  <!-- Cart List Container -->
+  <div class="cart-card" id="cartContainer">
+    <p style="text-align:center; color:#64748b; font-size:13px;">Loading cart...</p>
+  </div>
 
-  <div class="bottom-checkout">
-    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-      <span>Total (incl. VAT):</span>
-      <b style="color:#00875a; font-size:18px;">SAR <span id="cartTotal">0.00</span></b>
+  <!-- Checkout Details Form -->
+  <div class="checkout-box">
+    <h4 style="font-size:14px; margin-bottom:10px; color:#1e293b;">📋 Customer Information</h4>
+    
+    <div class="input-group">
+      <label>Full Name</label>
+      <input type="text" id="custName" placeholder="Enter your name">
     </div>
-    <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
+
+    <div class="input-group">
+      <label>Mobile Number</label>
+      <input type="tel" id="custPhone" placeholder="Enter phone number">
+    </div>
+
+    <div class="input-group">
+      <label>Delivery Address</label>
+      <input type="text" id="custAddress" placeholder="Street name, House/Apartment no." required>
+    </div>
+
+    <div class="total-box">
+      <span>Total Bill:</span>
+      <span>SAR <span id="totalBill">0.00</span></span>
+    </div>
+
+    <button class="submit-btn" id="placeOrderBtn" onclick="placeOrder()">Place Order Now</button>
   </div>
 
   <script>
-    let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
+    const API_URL = 'https://sunno-backend.onrender.com';
+    let cart = [];
 
-    function renderCart() {
-      const container = document.getElementById('cartItemsContainer');
-      let total = 0;
-      let count = 0;
+    // ১. কার্ট ডাটা লোড ও ইউজারের ডাটা অটো-ফিল করা
+    function initCart() {
+      cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
+      const user = JSON.parse(localStorage.getItem('sunno_user'));
 
-      if(cart.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:40px; color:#64748b;">Your cart is empty.</div>';
-        document.getElementById('cartTotal').innerText = '0.00';
-        document.getElementById('totalItems').innerText = '0';
+      // ইউজার লগইন থাকলে নাম ও ফোন নম্বর বক্স-এ নিজে থেকে বসে যাবে
+      if (user) {
+        if (user.name) document.getElementById('custName').value = user.name;
+        if (user.phone) document.getElementById('custPhone').value = user.phone;
+      }
+
+      renderCartUI();
+    }
+
+    // ২. কার্ট রেন্ডার
+    function renderCartUI() {
+      const container = document.getElementById('cartContainer');
+      
+      if (cart.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size:13px; padding:10px;">Your cart is empty.</p>';
+        document.getElementById('totalBill').innerText = '0.00';
+        document.getElementById('placeOrderBtn').disabled = true;
         return;
       }
 
+      document.getElementById('placeOrderBtn').disabled = false;
+      let total = 0;
+
       container.innerHTML = cart.map((item, index) => {
         total += item.price * item.qty;
-        count += item.qty;
         return `
-          <div class="cart-card">
-            <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.name}">
-            <div class="cart-info">
-              <div class="cart-title">${item.name}</div>
-              <div class="cart-price">SAR ${item.price}</div>
-              <div class="qty-controls">
-                <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
-                <span><b>${item.qty}</b></span>
-                <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
-              </div>
+          <div class="cart-item">
+            <img src="${item.image || 'https://via.placeholder.com/50'}" alt="${item.name}">
+            <div class="item-details">
+              <div class="item-title">${item.name}</div>
+              <div class="item-price">SAR ${item.price}</div>
             </div>
-            <button class="del-btn" onclick="removeItem(${index})">🗑️</button>
+            <div class="qty-controls">
+              <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+              <span style="font-size:12px; font-weight:600;">${item.qty}</span>
+              <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+            </div>
           </div>
         `;
       }).join('');
 
-      document.getElementById('cartTotal').innerText = total.toFixed(2);
-      document.getElementById('totalItems').innerText = count;
+      document.getElementById('totalBill').innerText = total.toFixed(2);
     }
 
+    // ৩. পরিমাণ কমানো/বাড়ানো
     function updateQty(index, change) {
       cart[index].qty += change;
-      if(cart[index].qty <= 0) cart.splice(index, 1);
-      saveCart();
-    }
-
-    function removeItem(index) {
-      cart.splice(index, 1);
-      saveCart();
-    }
-
-    function clearCart() {
-      cart = [];
-      saveCart();
-    }
-
-    function saveCart() {
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
       localStorage.setItem('sunno_cart', JSON.stringify(cart));
-      renderCart();
+      renderCartUI();
     }
 
-    function goToCheckout() {
-      if(cart.length === 0) { alert('Your cart is empty!'); return; }
-      window.location.href = 'login.html'; // আগে লগইন পেজে নিয়ে যাবে
+    // ৪. অর্ডার প্লেস করা (Checkout)
+    async function placeOrder() {
+      if (cart.length === 0) {
+        alert('Cart is empty!');
+        return;
+      }
+
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const address = document.getElementById('custAddress').value.trim();
+
+      if (!name || !phone || !address) {
+        alert('❌ Please fill in your Name, Phone Number, and Delivery Address!');
+        return;
+      }
+
+      const btn = document.getElementById('placeOrderBtn');
+      btn.innerText = 'Processing Order...';
+      btn.disabled = true;
+
+      const totalAmount = parseFloat(document.getElementById('totalBill').innerText);
+
+      try {
+        const response = await fetch(`${API_URL}/api/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customerName: name,
+            phone: phone,
+            address: address,
+            items: cart,
+            totalAmount: totalAmount
+          })
+        });
+
+        if (response.ok) {
+          alert('🎉 Order Placed Successfully!');
+          localStorage.removeItem('sunno_cart'); // কার্ট খালি করা
+          window.location.href = 'index.html'; // হোমপেজে ফেরত
+        } else {
+          alert('❌ Failed to place order. Try again!');
+          btn.innerText = 'Place Order Now';
+          btn.disabled = false;
+        }
+      } catch (err) {
+        alert('❌ Network Error! Could not connect to backend.');
+        btn.innerText = 'Place Order Now';
+        btn.disabled = false;
+      }
     }
 
-    renderCart();
+    // পেজ লোড হলে কল হবে
+    initCart();
   </script>
 </body>
 </html>
