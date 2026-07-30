@@ -287,7 +287,7 @@
       font-size: 11px;
     }
 
-    /* 🛒 BIGGER CART RUNNER OVERLAY (BIGGER & NO TEXT) */
+    /* 🏃‍♂️🛒 REAL CART PUSHER OVERLAY ANIMATION */
     .cart-runner-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -305,55 +305,91 @@
       background: #cbd5e1; position: relative;
       border-radius: 10px;
     }
+    
     .cart-runner-icon {
-      position: absolute; bottom: -2px; left: -60px; font-size: 55px; /* বড় সাইজ */
-    }
-    .cart-runner-overlay.active .cart-runner-icon {
-      animation: pushCartBig 1.8s ease-in-out infinite;
-    }
-    @keyframes pushCartBig {
-      0% { left: -60px; transform: rotate(0deg); }
-      50% { transform: rotate(-8deg); }
-      100% { left: 100%; transform: rotate(0deg); }
+      position: absolute;
+      bottom: -4px;
+      left: -120px;
+      display: flex;
+      align-items: center;
+      font-size: 48px;
+      line-height: 1;
     }
 
-    /* 🛍️ BIGGER FLYING CART WITH UPWARD MOTION */
+    .cart-runner-icon .pusher {
+      display: inline-block;
+      transform: scaleX(-1); /* মানুষ ডানদিকে ফিরবে */
+    }
+
+    .cart-runner-icon .cart-box {
+      display: inline-block;
+      transform: scaleX(-1); /* কার্টের হ্যান্ডেল মানুষের দিকে ঘুরবে */
+      margin-left: -10px;
+    }
+
+    .cart-runner-overlay.active .cart-runner-icon {
+      animation: pushCartReal 2s linear infinite;
+    }
+
+    @keyframes pushCartReal {
+      0% { 
+        left: -120px; 
+        transform: translateY(0) rotate(0deg); 
+      }
+      25% {
+        transform: translateY(-4px) rotate(-2deg); 
+      }
+      50% {
+        transform: translateY(0) rotate(1deg);
+      }
+      75% {
+        transform: translateY(-4px) rotate(-1deg);
+      }
+      100% { 
+        left: 100%; 
+        transform: translateY(0) rotate(0deg); 
+      }
+    }
+
+    /* 🛍️ FLYING CART UPWARD ANIMATION */
     .cart-fly-item {
       position: fixed;
       z-index: 3000;
-      font-size: 32px; /* বড় কার্ট আইকন */
+      font-size: 32px;
       pointer-events: none;
-      transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1); /* স্মুথ ও ধীর গতি */
+      transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
     }
   </style>
 </head>
 <body>
 
-  <!-- 🛒 BIGGER CART RUNNER OVERLAY (No Text) -->
+  <!-- 🏃‍♂️🛒 REAL PUSHER OVERLAY -->
   <div id="cartRunnerOverlay" class="cart-runner-overlay">
     <div class="cart-runner-track">
-      <div class="cart-runner-icon">🏃‍♂️🛒</div>
+      <div class="cart-runner-icon">
+        <span class="pusher">🚶‍♂️</span><span class="cart-box">🛒</span>
+      </div>
     </div>
   </div>
 
-  <!-- 1. HEADER SECTION -->
+  <!-- HEADER SECTION -->
   <div class="header">
     <a href="index.html" class="brand-logo">🛒 SUNNO STORE</a>
   </div>
 
-  <!-- 2. SEARCH BAR -->
+  <!-- SEARCH BAR -->
   <div class="search-container">
     <span class="search-icon">🔍</span>
     <input type="text" placeholder="Search products...">
   </div>
 
-  <!-- 3. CATEGORIES -->
+  <!-- CATEGORIES -->
   <div class="categories">
     <button class="cat-btn active">All</button>
     <button class="cat-btn">Fashion</button>
   </div>
 
-  <!-- 4. TRACK ORDER STATUS -->
+  <!-- TRACK ORDER STATUS -->
   <div class="track-box">
     <div class="track-title">📍 Track Your Order Status</div>
     <div class="track-form">
@@ -363,11 +399,10 @@
     <div class="track-result" id="trackResultBox"></div>
   </div>
 
-  <!-- 5. FEATURED PRODUCTS -->
+  <!-- FEATURED PRODUCTS -->
   <div class="section-title">Featured Products</div>
   
   <div class="products-grid" id="productContainer">
-    <!-- Product Card -->
     <div class="product-card">
       <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=300" alt="Shirt">
       <div class="product-name">Men check shirt</div>
@@ -376,7 +411,7 @@
     </div>
   </div>
 
-  <!-- 6. FOOTER SECTION -->
+  <!-- FOOTER SECTION -->
   <footer class="site-footer">
     <div class="footer-brand">
       <h2 class="footer-logo">🛒 SUNNO STORE</h2>
@@ -409,7 +444,7 @@
     </div>
   </footer>
 
-  <!-- 7. MOBILE BOTTOM NAVIGATION BAR -->
+  <!-- MOBILE BOTTOM NAV BAR -->
   <div class="mobile-bottom-nav">
     <a href="index.html" class="nav-item active">
       <span class="nav-icon">⊞</span>
@@ -435,15 +470,14 @@
     </a>
   </div>
 
-  <!-- 8. ANIMATED TOAST NOTIFICATION -->
+  <!-- ANIMATED TOAST NOTIFICATION -->
   <div id="toastPopup" class="toast-popup">
     <span class="toast-icon">✓</span>
     <span id="toastMsg">Men check shirt Cart-এ যোগ করা হয়েছে!</span>
   </div>
 
-  <!-- 9. JAVASCRIPT LOGIC -->
   <script>
-    // 🚚 পেজ লোড এনিমেশন (বড় কার্ট যাবে, কোনো লেখা থাকবে না)
+    // 🚚 Page Load Animation
     window.addEventListener('DOMContentLoaded', () => {
       const overlay = document.getElementById('cartRunnerOverlay');
       if (overlay) {
@@ -453,7 +487,7 @@
       updateCartCount();
     });
 
-    // 📍 অর্ডার ট্র্যাকিং এনিমেশন
+    // 📍 Track Order
     function trackOrder() {
       const phoneInput = document.getElementById('trackPhoneInput').value.trim();
       const resultBox = document.getElementById('trackResultBox');
@@ -473,7 +507,7 @@
       }, 1600);
     }
 
-    // 🔔 কাস্টম পপআপ
+    // 🔔 Toast Popup
     function showToast(message) {
       const toast = document.getElementById('toastPopup');
       const toastMsg = document.getElementById('toastMsg');
@@ -482,7 +516,7 @@
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // 🛍️ আপগ্রেডেড ফ্লাইং অ্যাড-টু-কার্ট (প্রথমে উপরে উঠবে, তারপর ধীরে নিচে যাবে)
+    // 🛍️ Upward Flying Add to Cart
     function addToCart(name, price, image, event) {
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
       const existing = cart.find(item => item.name === name);
@@ -495,7 +529,6 @@
 
       localStorage.setItem('sunno_cart', JSON.stringify(cart));
 
-      // ফ্লাইং কার্ট এলিমেন্ট
       const flyCart = document.createElement('div');
       flyCart.className = 'cart-fly-item';
       flyCart.innerText = '🛒';
@@ -510,12 +543,10 @@
 
       const targetCart = document.getElementById('bottomCartCount').getBoundingClientRect();
 
-      // ধাপ ১: আগে একটু উপরের দিকে লাফ দিবে (Upward Curve)
       setTimeout(() => {
-        flyCart.style.top = (startY - 60) + 'px'; // ৬০ পিক্সেল উপরে ভাসবে
+        flyCart.style.top = (startY - 60) + 'px'; 
       }, 50);
 
-      // ধাপ ২: এরপর ধীরে নিচে ফুটার কার্ট আইকনে চলে যাবে
       setTimeout(() => {
         flyCart.style.left = targetCart.left + 'px';
         flyCart.style.top = targetCart.top + 'px';
@@ -523,12 +554,11 @@
         flyCart.style.opacity = '0.7';
       }, 350);
 
-      // ধাপ ৩: রিমুভ ও কাউন্ট আপডেট
       setTimeout(() => {
         flyCart.remove();
         updateCartCount();
         showToast(name + ' Cart-এ যোগ করা হয়েছে!');
-      }, 1200); // অ্যানিমেশন সময় বাড়ানো হয়েছে
+      }, 1200);
     }
 
     function updateCartCount() {
