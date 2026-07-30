@@ -53,7 +53,7 @@
       
       <div class="header-actions">
         <!-- Login Button -->
-        <div class="login-btn" id="userAccountBtn" onclick="window.location.href='login.html'">
+        <div class="login-btn" id="userAccountBtn">
           👤 Login
         </div>
         
@@ -109,7 +109,7 @@
           document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center;">Failed to load products.</p>';
         }
       } catch (err) {
-        document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center;">Connecting to server...</p>';
+        document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#ef4444;">Connecting to server... Please refresh after a few seconds.</p>';
       }
     }
 
@@ -188,7 +188,6 @@
       if (cartCountEl) cartCountEl.innerText = totalCount;
     }
 
-        // 🟢 🟢 🟢 নতুন কোড শুরু ⬇️ ⬇️ ⬇️
     // ৮. ইউজার লগইন অবস্থা চেক ও অ্যাকাউন্ট ইনফো
     function checkUserLogin() {
       const user = JSON.parse(localStorage.getItem('sunno_user'));
@@ -244,8 +243,6 @@
       } catch (err) {
         resEl.innerHTML = '<span style="color:#ef4444;">Could not fetch tracking status. Try again later.</span>';
       }
-    }
-
     }
 
     // পেজ লোড হলে রান হবে
