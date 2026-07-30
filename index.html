@@ -18,7 +18,7 @@
       background: #f8fafc;
       color: #1e293b;
       padding: 15px;
-      padding-bottom: 80px; /* বটম বারের জায়গা */
+      padding-bottom: 80px;
     }
 
     /* 📌 HEADER SECTION */
@@ -132,6 +132,17 @@
       cursor: pointer;
     }
 
+    .track-result {
+      margin-top: 12px;
+      padding: 10px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #166534;
+      display: none;
+    }
+
     /* 🛍️ FEATURED PRODUCTS */
     .section-title {
       font-size: 15px;
@@ -238,11 +249,94 @@
       font-size: 9px; font-weight: bold; border-radius: 50%; width: 15px; height: 15px;
       display: flex; align-items: center; justify-content: center;
     }
+
+    /* 🔔 CUSTOM ANIMATED TOAST POPUP */
+    .toast-popup {
+      position: fixed;
+      bottom: 75px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      font-size: 12px;
+      border: 1px solid #334155;
+    }
+    .toast-popup.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+    .toast-icon {
+      background: #00875a;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    /* 🛒 CART RUNNER OVERLAY ANIMATION */
+    .cart-runner-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(255, 255, 255, 0.93);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      z-index: 9999;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .cart-runner-overlay.active {
+      opacity: 1; pointer-events: all;
+    }
+    .cart-runner-track {
+      width: 80%; max-width: 300px; height: 4px;
+      background: #e2e8f0; position: relative;
+      border-radius: 2px; margin-top: 15px; overflow: hidden;
+    }
+    .cart-runner-icon {
+      position: absolute; bottom: -2px; left: -40px; font-size: 30px;
+    }
+    .cart-runner-overlay.active .cart-runner-icon {
+      animation: pushCart 1.5s linear infinite;
+    }
+    @keyframes pushCart {
+      0% { left: -40px; transform: rotate(0deg); }
+      50% { transform: rotate(-5deg); }
+      100% { left: 100%; transform: rotate(0deg); }
+    }
+    .cart-loading-text {
+      font-size: 13px; font-weight: 700; color: #00875a;
+    }
+    .cart-fly-item {
+      position: fixed; z-index: 3000; font-size: 22px;
+      pointer-events: none; transition: all 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
   </style>
 </head>
 <body>
 
-  <!-- 1. HEADER SECTION (শুধুমাত্র লোগো রাখা হয়েছে) -->
+  <!-- 🛒 CART RUNNER OVERLAY -->
+  <div id="cartRunnerOverlay" class="cart-runner-overlay">
+    <div class="cart-loading-text" id="cartRunnerText">SUNNO STORE লোড হচ্ছে...</div>
+    <div class="cart-runner-track">
+      <div class="cart-runner-icon">🏃‍♂️🛒</div>
+    </div>
+  </div>
+
+  <!-- 1. HEADER SECTION -->
   <div class="header">
     <a href="index.html" class="brand-logo">🛒 SUNNO STORE</a>
   </div>
@@ -263,21 +357,22 @@
   <div class="track-box">
     <div class="track-title">📍 Track Your Order Status</div>
     <div class="track-form">
-      <input type="text" placeholder="Enter Mobile Number">
-      <button type="button">Check</button>
+      <input type="text" id="trackPhoneInput" placeholder="Enter Mobile Number">
+      <button type="button" onclick="trackOrder()">Check</button>
     </div>
+    <div class="track-result" id="trackResultBox"></div>
   </div>
 
   <!-- 5. FEATURED PRODUCTS -->
   <div class="section-title">Featured Products</div>
   
   <div class="products-grid" id="productContainer">
-    <!-- Demo Product Card -->
+    <!-- Product Card -->
     <div class="product-card">
       <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=300" alt="Shirt">
       <div class="product-name">Men check shirt</div>
       <div class="product-price">SAR 25</div>
-      <button class="add-btn" onclick="addToCart('Men check shirt', 25, 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=300')">+ Add</button>
+      <button class="add-btn" onclick="addToCart('Men check shirt', 25, 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=300', event)">+ Add</button>
     </div>
   </div>
 
@@ -285,9 +380,9 @@
   <footer class="site-footer">
     <div class="footer-brand">
       <h2 class="footer-logo">🛒 SUNNO STORE</h2>
-      <p><strong>Address:</strong> Dhaka,bangladesh</p>
+      <p><strong>Address:</strong> Mahim ganguly road, Mina bazar, Tan bazar, Narayanganj, Dhaka, Bangladesh</p>
       <p><strong>Email:</strong> info@sunnostore.com</p>
-      <p><strong>Phone:</strong> (+880) 1703135684</p>
+      <p><strong>Phone:</strong> (+880) 1896063801</p>
       <a href="#" class="direction-link">Get direction ↗</a>
     </div>
 
@@ -340,10 +435,58 @@
     </a>
   </div>
 
-  <!-- 8. JAVASCRIPT LOGIC -->
+  <!-- 8. ANIMATED TOAST NOTIFICATION -->
+  <div id="toastPopup" class="toast-popup">
+    <span class="toast-icon">✓</span>
+    <span id="toastMsg">Men check shirt Cart-এ যোগ করা হয়েছে!</span>
+  </div>
+
+  <!-- 9. JAVASCRIPT LOGIC -->
   <script>
-    // কার্টে প্রোডাক্ট যোগ করা
-    function addToCart(name, price, image) {
+    // 🚚 পেজ লোডিং অ্যানিমেশন
+    window.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('cartRunnerOverlay');
+      if (overlay) {
+        overlay.classList.add('active');
+        setTimeout(() => overlay.classList.remove('active'), 1200);
+      }
+      updateCartCount();
+    });
+
+    // 📍 অর্ডার ট্র্যাক ফাংশন
+    function trackOrder() {
+      const phoneInput = document.getElementById('trackPhoneInput').value.trim();
+      const resultBox = document.getElementById('trackResultBox');
+      const overlay = document.getElementById('cartRunnerOverlay');
+      const text = document.getElementById('cartRunnerText');
+
+      if (!phoneInput) {
+        alert('অনুগ্রহ করে আপনার মোবাইল নম্বর দিন!');
+        return;
+      }
+
+      // ট্র্যাকিং এনিমেশন
+      text.innerText = "অর্ডার খোঁজা হচ্ছে... 🏃‍♂️";
+      overlay.classList.add('active');
+
+      setTimeout(() => {
+        overlay.classList.remove('active');
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `<strong>Status for ${phoneInput}:</strong><br>📦 Order #SN-${Math.floor(1000 + Math.random() * 9000)} is <strong>In Transit (প্রক্রিয়াধীন)</strong>.`;
+      }, 1500);
+    }
+
+    // 🔔 পপআপ দেখানোর ফাংশন
+    function showToast(message) {
+      const toast = document.getElementById('toastPopup');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // 🛍️ ফ্লাইং অ্যাড টু কার্ট
+    function addToCart(name, price, image, event) {
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
       const existing = cart.find(item => item.name === name);
       
@@ -354,23 +497,40 @@
       }
 
       localStorage.setItem('sunno_cart', JSON.stringify(cart));
-      updateCartCount();
-      alert(name + ' Cart-এ যোগ করা হয়েছে!');
+
+      // ফ্লাইং কার্ট আইকন তৈরি
+      const flyCart = document.createElement('div');
+      flyCart.className = 'cart-fly-item';
+      flyCart.innerText = '🛒';
+      
+      const rect = event.target.getBoundingClientRect();
+      flyCart.style.left = rect.left + 'px';
+      flyCart.style.top = rect.top + 'px';
+      document.body.appendChild(flyCart);
+
+      const targetCart = document.getElementById('bottomCartCount').getBoundingClientRect();
+      
+      setTimeout(() => {
+        flyCart.style.left = targetCart.left + 'px';
+        flyCart.style.top = targetCart.top + 'px';
+        flyCart.style.scale = '0.2';
+        flyCart.style.opacity = '0.5';
+      }, 50);
+
+      setTimeout(() => {
+        flyCart.remove();
+        updateCartCount();
+        showToast(name + ' Cart-এ যোগ করা হয়েছে!');
+      }, 850);
     }
 
-    // শুধুমাত্র নিচের কার্ট বারের কাউন্টার আপডেট করা
+    // কার্ট হিসাব আপডেট
     function updateCartCount() {
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
       const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
-
       const bottomCart = document.getElementById('bottomCartCount');
-      if (bottomCart) {
-        bottomCart.innerText = totalCount;
-      }
+      if (bottomCart) bottomCart.innerText = totalCount;
     }
-
-    // পেজ লোড হলে কার্ট কাউন্ট দেখানো
-    document.addEventListener('DOMContentLoaded', updateCartCount);
   </script>
 
 </body>
