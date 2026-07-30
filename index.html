@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SUNNO STORE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     * {
@@ -16,7 +16,7 @@
 
     body {
       background: #f8fafc;
-      color: #1e293b;
+      color: #0f172a;
       padding: 15px;
       padding-bottom: 80px;
     }
@@ -37,6 +37,7 @@
       font-weight: 800;
       color: #00875a;
       text-decoration: none;
+      letter-spacing: -0.5px;
     }
 
     /* 🔍 SEARCH BAR */
@@ -49,18 +50,21 @@
       width: 100%;
       padding: 12px 15px 12px 40px;
       border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      background: #f1f5f9;
+      border-radius: 12px;
+      background: #ffffff;
       font-size: 13px;
+      color: #0f172a;
       outline: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
 
     .search-icon {
       position: absolute;
-      left: 12px;
+      left: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: #94a3b8;
+      font-size: 14px;
     }
 
     /* 🏷️ CATEGORIES */
@@ -72,36 +76,38 @@
     }
 
     .cat-btn {
-      padding: 6px 16px;
+      padding: 8px 18px;
       border-radius: 20px;
       border: none;
-      background: #f1f5f9;
+      background: #ffffff;
       color: #475569;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
+      border: 1px solid #e2e8f0;
     }
 
     .cat-btn.active {
       background: #00875a;
       color: white;
+      border-color: #00875a;
     }
 
     /* 📍 TRACK ORDER BOX */
     .track-box {
       background: #ffffff;
-      padding: 15px;
-      border-radius: 12px;
+      padding: 16px;
+      border-radius: 14px;
       border: 1px solid #e2e8f0;
       margin-bottom: 25px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
     }
 
     .track-title {
       font-size: 13px;
       font-weight: 700;
       color: #0f172a;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -114,10 +120,11 @@
 
     .track-form input {
       flex: 1;
-      padding: 8px 12px;
+      padding: 10px 14px;
       border: 1px solid #cbd5e1;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 12px;
+      color: #0f172a;
       outline: none;
     }
 
@@ -125,8 +132,8 @@
       background: #0284c7;
       color: white;
       border: none;
-      padding: 0 16px;
-      border-radius: 6px;
+      padding: 0 18px;
+      border-radius: 8px;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
@@ -134,7 +141,7 @@
 
     .track-result {
       margin-top: 12px;
-      padding: 10px;
+      padding: 12px;
       background: #f0fdf4;
       border: 1px solid #bbf7d0;
       border-radius: 8px;
@@ -145,7 +152,7 @@
 
     /* 🛍️ FEATURED PRODUCTS */
     .section-title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
       color: #0f172a;
       margin-bottom: 15px;
@@ -154,40 +161,41 @@
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px;
+      gap: 14px;
     }
 
     .product-card {
       background: white;
-      border-radius: 12px;
-      padding: 10px;
+      border-radius: 14px;
+      padding: 12px;
       border: 1px solid #e2e8f0;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
     }
 
     .product-card img {
       width: 100%;
-      height: 120px;
+      height: 130px;
       object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 8px;
+      border-radius: 10px;
+      margin-bottom: 10px;
     }
 
     .product-name {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
-      color: #1e293b;
+      color: #0f172a;
       margin-bottom: 4px;
     }
 
     .product-price {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       color: #00875a;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .add-btn {
@@ -195,11 +203,12 @@
       color: white;
       border: none;
       width: 100%;
-      padding: 6px;
-      border-radius: 6px;
+      padding: 8px;
+      border-radius: 8px;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
+      transition: background 0.2s;
     }
 
     /* 📌 FOOTER STYLES */
@@ -215,7 +224,7 @@
     }
 
     .footer-logo { font-weight: 800; font-size: 18px; color: #00875a; margin-bottom: 10px; }
-    .footer-brand p { margin-bottom: 5px; color: #475569; line-height: 1.4; }
+    .footer-brand p { margin-bottom: 5px; color: #475569; line-height: 1.5; }
     .direction-link { display: inline-block; color: #0f172a; font-weight: 600; margin: 6px 0 15px 0; }
     .social-icons { display: flex; gap: 8px; margin-bottom: 20px; }
     .s-icon {
@@ -225,18 +234,19 @@
     }
     .footer-accordion {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 0; border-top: 1px solid #f1f5f9; font-weight: 600; font-size: 13px;
+      padding: 12px 0; border-top: 1px solid #f1f5f9; font-weight: 600; font-size: 13px; color: #0f172a;
     }
-    .footer-bottom { text-align: center; margin-top: 20px; }
-    .footer-bottom p { color: #94a3b8; font-size: 10px; margin-bottom: 10px; }
+    .footer-bottom { text-align: center; margin-top: 25px; }
+    .footer-bottom p { color: #94a3b8; font-size: 11px; margin-bottom: 10px; }
     .payment-badges { display: flex; justify-content: center; gap: 6px; }
-    .pay-card { padding: 3px 8px; border-radius: 4px; font-weight: 700; font-size: 9px; border: 1px solid #e2e8f0; background: #f8fafc; }
+    .pay-card { padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 9px; border: 1px solid #e2e8f0; background: #f8fafc; color: #334155; }
 
     /* 📱 MOBILE BOTTOM NAV BAR */
     .mobile-bottom-nav {
       position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff;
       display: flex; justify-content: space-around; align-items: center;
-      padding: 8px 0; border-top: 1px solid #e2e8f0; z-index: 1000;
+      padding: 10px 0; border-top: 1px solid #e2e8f0; z-index: 1000;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
     }
     .nav-item {
       display: flex; flex-direction: column; align-items: center; text-decoration: none;
@@ -246,11 +256,11 @@
     .nav-icon { font-size: 18px; margin-bottom: 2px; }
     .nav-badge {
       position: absolute; top: -2px; right: 18px; background: #ef4444; color: white;
-      font-size: 9px; font-weight: bold; border-radius: 50%; width: 15px; height: 15px;
+      font-size: 9px; font-weight: bold; border-radius: 50%; width: 16px; height: 16px;
       display: flex; align-items: center; justify-content: center;
     }
 
-    /* 🔔 CUSTOM ANIMATED TOAST POPUP */
+    /* 🔔 CUSTOM TOAST POPUP */
     .toast-popup {
       position: fixed;
       bottom: 75px;
@@ -258,16 +268,16 @@
       transform: translateX(-50%) translateY(100px);
       background: #0f172a;
       color: #ffffff;
-      padding: 10px 18px;
+      padding: 12px 20px;
       border-radius: 30px;
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
       z-index: 2000;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       font-size: 12px;
       border: 1px solid #334155;
     }
@@ -278,8 +288,8 @@
     }
     .toast-icon {
       background: #00875a;
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -287,75 +297,99 @@
       font-size: 11px;
     }
 
-    /* 🏃‍♂️🛒 REAL CART PUSHER OVERLAY ANIMATION */
+    /* 💎 ULTRA-PREMIUM GLASS OVERLAY */
     .cart-runner-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex; justify-content: center; align-items: center;
       z-index: 9999;
       opacity: 0; pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     .cart-runner-overlay.active {
       opacity: 1; pointer-events: all;
     }
-    .cart-runner-track {
-      width: 85%; max-width: 400px; height: 8px;
-      background: #cbd5e1; position: relative;
-      border-radius: 10px;
-    }
-    
-    .cart-runner-icon {
-      position: absolute;
-      bottom: -4px;
-      left: -120px;
+
+    .premium-loader-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px 40px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      font-size: 48px;
-      line-height: 1;
+      gap: 16px;
+      max-width: 320px;
+      width: 85%;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transform: scale(0.9);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .cart-runner-icon .pusher {
-      display: inline-block;
-      transform: scaleX(-1); /* মানুষ ডানদিকে ফিরবে */
+    .cart-runner-overlay.active .premium-loader-card {
+      transform: scale(1);
     }
 
-    .cart-runner-icon .cart-box {
-      display: inline-block;
-      transform: scaleX(-1); /* কার্টের হ্যান্ডেল মানুষের দিকে ঘুরবে */
-      margin-left: -10px;
+    .svg-cart-icon {
+      width: 56px;
+      height: 56px;
+      color: #00875a;
+      animation: bounceCart 1.2s ease-in-out infinite alternate;
     }
 
-    .cart-runner-overlay.active .cart-runner-icon {
-      animation: pushCartReal 2s linear infinite;
+    @keyframes bounceCart {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-8deg) rotate(-3deg); }
     }
 
-    @keyframes pushCartReal {
-      0% { 
-        left: -120px; 
-        transform: translateY(0) rotate(0deg); 
-      }
-      25% {
-        transform: translateY(-4px) rotate(-2deg); 
-      }
-      50% {
-        transform: translateY(0) rotate(1deg);
-      }
-      75% {
-        transform: translateY(-4px) rotate(-1deg);
-      }
-      100% { 
-        left: 100%; 
-        transform: translateY(0) rotate(0deg); 
-      }
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
     }
 
-    /* 🛍️ FLYING CART UPWARD ANIMATION */
+    .progress-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #00875a, #10b981, #34d399);
+      border-radius: 10px;
+      position: absolute;
+      left: -100%;
+      animation: shimmerProgress 1.6s ease-in-out infinite;
+    }
+
+    @keyframes shimmerProgress {
+      0% { left: -100%; }
+      50% { left: 0%; }
+      100% { left: 100%; }
+    }
+
+    .loader-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+    }
+
+    .loader-subtext {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: -8px;
+    }
+
+    /* 🛍️ FLYING CART ANIMATION */
     .cart-fly-item {
       position: fixed;
       z-index: 3000;
-      font-size: 32px;
+      font-size: 28px;
       pointer-events: none;
       transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
     }
@@ -363,18 +397,25 @@
 </head>
 <body>
 
-  <!-- 🏃‍♂️🛒 REAL PUSHER OVERLAY -->
+  <!-- 💎 ULTRA-PREMIUM LOADER OVERLAY -->
   <div id="cartRunnerOverlay" class="cart-runner-overlay">
-    <div class="cart-runner-track">
-      <div class="cart-runner-icon">
-        <span class="pusher">🚶‍♂️</span><span class="cart-box">🛒</span>
+    <div class="premium-loader-card">
+      <svg class="svg-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <div class="loader-title">SUNNO STORE</div>
+      <div class="loader-subtext" id="loaderSubtext">Processing...</div>
+      <div class="progress-track">
+        <div class="progress-fill"></div>
       </div>
     </div>
   </div>
 
   <!-- HEADER SECTION -->
   <div class="header">
-    <a href="index.html" class="brand-logo">🛒 SUNNO STORE</a>
+    <a href="index.html" class="brand-logo">SUNNO STORE</a>
   </div>
 
   <!-- SEARCH BAR -->
@@ -414,7 +455,7 @@
   <!-- FOOTER SECTION -->
   <footer class="site-footer">
     <div class="footer-brand">
-      <h2 class="footer-logo">🛒 SUNNO STORE</h2>
+      <h2 class="footer-logo">SUNNO STORE</h2>
       <p><strong>Address:</strong> Mahim ganguly road, Mina bazar, Tan bazar, Narayanganj, Dhaka, Bangladesh</p>
       <p><strong>Email:</strong> info@sunnostore.com</p>
       <p><strong>Phone:</strong> (+880) 1896063801</p>
@@ -473,41 +514,45 @@
   <!-- ANIMATED TOAST NOTIFICATION -->
   <div id="toastPopup" class="toast-popup">
     <span class="toast-icon">✓</span>
-    <span id="toastMsg">Men check shirt Cart-এ যোগ করা হয়েছে!</span>
+    <span id="toastMsg">Item added to cart!</span>
   </div>
 
   <script>
-    // 🚚 Page Load Animation
+    // Page Load Animation
     window.addEventListener('DOMContentLoaded', () => {
       const overlay = document.getElementById('cartRunnerOverlay');
+      const subtext = document.getElementById('loaderSubtext');
       if (overlay) {
+        subtext.innerText = "Loading Store...";
         overlay.classList.add('active');
-        setTimeout(() => overlay.classList.remove('active'), 1400);
+        setTimeout(() => overlay.classList.remove('active'), 1200);
       }
       updateCartCount();
     });
 
-    // 📍 Track Order
+    // Track Order
     function trackOrder() {
       const phoneInput = document.getElementById('trackPhoneInput').value.trim();
       const resultBox = document.getElementById('trackResultBox');
       const overlay = document.getElementById('cartRunnerOverlay');
+      const subtext = document.getElementById('loaderSubtext');
 
       if (!phoneInput) {
         alert('অনুগ্রহ করে আপনার মোবাইল নম্বর দিন!');
         return;
       }
 
+      subtext.innerText = "Tracking Order...";
       overlay.classList.add('active');
 
       setTimeout(() => {
         overlay.classList.remove('active');
         resultBox.style.display = 'block';
         resultBox.innerHTML = `<strong>Status for ${phoneInput}:</strong><br>📦 Order #SN-${Math.floor(1000 + Math.random() * 9000)} is <strong>In Transit (প্রক্রিয়াধীন)</strong>.`;
-      }, 1600);
+      }, 1400);
     }
 
-    // 🔔 Toast Popup
+    // Toast Popup
     function showToast(message) {
       const toast = document.getElementById('toastPopup');
       const toastMsg = document.getElementById('toastMsg');
@@ -516,7 +561,7 @@
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // 🛍️ Upward Flying Add to Cart
+    // Upward Flying Add to Cart
     function addToCart(name, price, image, event) {
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
       const existing = cart.find(item => item.name === name);
@@ -531,7 +576,7 @@
 
       const flyCart = document.createElement('div');
       flyCart.className = 'cart-fly-item';
-      flyCart.innerText = '🛒';
+      flyCart.innerText = '🛍️';
       
       const rect = event.target.getBoundingClientRect();
       const startX = rect.left + 10;
@@ -558,7 +603,7 @@
         flyCart.remove();
         updateCartCount();
         showToast(name + ' Cart-এ যোগ করা হয়েছে!');
-      }, 1200);
+      }, 1000);
     }
 
     function updateCartCount() {

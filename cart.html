@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Cart - SUNNO STORE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     * {
@@ -16,7 +16,7 @@
 
     body {
       background: #f8fafc;
-      color: #1e293b;
+      color: #0f172a;
       padding: 15px;
     }
 
@@ -30,9 +30,10 @@
     .back-btn {
       text-decoration: none;
       color: #475569;
-      background: #e2e8f0;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
       padding: 8px 14px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 13px;
       font-weight: 600;
     }
@@ -50,12 +51,13 @@
     .cart-item {
       background: white;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
     }
 
     .cart-item-info {
@@ -68,12 +70,13 @@
       width: 60px;
       height: 60px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 10px;
     }
 
     .item-details h4 {
       font-size: 13px;
       color: #0f172a;
+      font-weight: 600;
     }
 
     .item-details p {
@@ -96,29 +99,29 @@
       background: white;
       width: 24px;
       height: 24px;
-      border-radius: 4px;
+      border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
+      color: #0f172a;
     }
 
     .checkout-form {
       background: white;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 15px;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
     }
 
     .form-title {
       font-size: 14px;
       font-weight: 700;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      margin-bottom: 14px;
+      color: #0f172a;
     }
 
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .form-group label {
@@ -131,10 +134,11 @@
 
     .form-group input {
       width: 100%;
-      padding: 10px;
+      padding: 10px 12px;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
       font-size: 13px;
+      color: #0f172a;
       outline: none;
     }
 
@@ -144,77 +148,99 @@
       color: white;
       border: none;
       padding: 12px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       margin-top: 10px;
     }
 
-    /* 🏃‍♂️🛒 REAL PUSHER OVERLAY */
+    /* 💎 ULTRA-PREMIUM GLASS OVERLAY */
     .cart-runner-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex; justify-content: center; align-items: center;
       z-index: 9999;
       opacity: 0; pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .cart-runner-overlay.active {
       opacity: 1; pointer-events: all;
     }
 
-    .cart-runner-track {
-      width: 85%; max-width: 400px; height: 8px;
-      background: #cbd5e1; position: relative;
-      border-radius: 10px;
-    }
-
-    .cart-runner-icon {
-      position: absolute;
-      bottom: -4px;
-      left: -120px;
+    .premium-loader-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px 40px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      font-size: 48px;
-      line-height: 1;
+      gap: 16px;
+      max-width: 320px;
+      width: 85%;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transform: scale(0.9);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .cart-runner-icon .pusher {
-      display: inline-block;
-      transform: scaleX(-1);
+    .cart-runner-overlay.active .premium-loader-card {
+      transform: scale(1);
     }
 
-    .cart-runner-icon .cart-box {
-      display: inline-block;
-      transform: scaleX(-1);
-      margin-left: -10px;
+    .svg-cart-icon {
+      width: 56px;
+      height: 56px;
+      color: #00875a;
+      animation: bounceCart 1.2s ease-in-out infinite alternate;
     }
 
-    .cart-runner-overlay.active .cart-runner-icon {
-      animation: pushCartReal 2s linear infinite;
+    @keyframes bounceCart {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-8deg) rotate(-3deg); }
     }
 
-    @keyframes pushCartReal {
-      0% { 
-        left: -120px; 
-        transform: translateY(0) rotate(0deg); 
-      }
-      25% {
-        transform: translateY(-4px) rotate(-2deg); 
-      }
-      50% {
-        transform: translateY(0) rotate(1deg);
-      }
-      75% {
-        transform: translateY(-4px) rotate(-1deg);
-      }
-      100% { 
-        left: 100%; 
-        transform: translateY(0) rotate(0deg); 
-      }
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #00875a, #10b981, #34d399);
+      border-radius: 10px;
+      position: absolute;
+      left: -100%;
+      animation: shimmerProgress 1.6s ease-in-out infinite;
+    }
+
+    @keyframes shimmerProgress {
+      0% { left: -100%; }
+      50% { left: 0%; }
+      100% { left: 100%; }
+    }
+
+    .loader-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+    }
+
+    .loader-subtext {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: -8px;
     }
 
     /* 🔔 TOAST POPUP */
@@ -230,11 +256,11 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
       z-index: 10000;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       font-size: 13px;
       border: 1px solid #334155;
     }
@@ -247,8 +273,8 @@
 
     .toast-icon {
       background: #00875a;
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -259,18 +285,25 @@
 </head>
 <body>
 
-  <!-- 🏃‍♂️🛒 REAL PUSHER OVERLAY -->
+  <!-- 💎 ULTRA-PREMIUM LOADER OVERLAY -->
   <div id="cartRunnerOverlay" class="cart-runner-overlay">
-    <div class="cart-runner-track">
-      <div class="cart-runner-icon">
-        <span class="pusher">🚶‍♂️</span><span class="cart-box">🛒</span>
+    <div class="premium-loader-card">
+      <svg class="svg-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <div class="loader-title">SUNNO STORE</div>
+      <div class="loader-subtext">Placing your order...</div>
+      <div class="progress-track">
+        <div class="progress-fill"></div>
       </div>
     </div>
   </div>
 
   <div class="top-bar">
     <a href="index.html" class="back-btn">← Back to Shop</a>
-    <div class="page-title">🛒 Your Cart</div>
+    <div class="page-title">Your Cart</div>
   </div>
 
   <div class="cart-items-container" id="cartListContainer"></div>
@@ -304,7 +337,7 @@
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
 
       if (cart.length === 0) {
-        container.innerHTML = '<p style="text-align:center; padding:20px; color:#64748b;">Your cart is empty!</p>';
+        container.innerHTML = '<p style="text-align:center; padding:20px; color:#64748b; font-size:13px;">Your cart is empty!</p>';
         return;
       }
 
@@ -319,7 +352,7 @@
           </div>
           <div class="qty-controls">
             <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
-            <span>${item.qty}</span>
+            <span style="font-size:12px; font-weight:600;">${item.qty}</span>
             <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
           </div>
         </div>
@@ -372,13 +405,13 @@
       setTimeout(() => {
         if (overlay) overlay.classList.remove('active');
         localStorage.removeItem('sunno_cart');
-        showToast("🎉 Order Placed Successfully!");
+        showToast("Order Placed Successfully!");
 
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 1500);
 
-      }, 2000);
+      }, 1800);
     }
 
     document.addEventListener('DOMContentLoaded', loadCartItems);
