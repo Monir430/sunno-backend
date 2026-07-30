@@ -287,13 +287,12 @@
       font-size: 11px;
     }
 
-    /* 🛒 CART RUNNER OVERLAY ANIMATION */
+    /* 🛒 BIGGER CART RUNNER OVERLAY (BIGGER & NO TEXT) */
     .cart-runner-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(255, 255, 255, 0.93);
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex; justify-content: center; align-items: center;
       z-index: 9999;
       opacity: 0; pointer-events: none;
       transition: opacity 0.3s ease;
@@ -302,35 +301,36 @@
       opacity: 1; pointer-events: all;
     }
     .cart-runner-track {
-      width: 80%; max-width: 300px; height: 4px;
-      background: #e2e8f0; position: relative;
-      border-radius: 2px; margin-top: 15px; overflow: hidden;
+      width: 85%; max-width: 400px; height: 8px;
+      background: #cbd5e1; position: relative;
+      border-radius: 10px;
     }
     .cart-runner-icon {
-      position: absolute; bottom: -2px; left: -40px; font-size: 30px;
+      position: absolute; bottom: -2px; left: -60px; font-size: 55px; /* বড় সাইজ */
     }
     .cart-runner-overlay.active .cart-runner-icon {
-      animation: pushCart 1.5s linear infinite;
+      animation: pushCartBig 1.8s ease-in-out infinite;
     }
-    @keyframes pushCart {
-      0% { left: -40px; transform: rotate(0deg); }
-      50% { transform: rotate(-5deg); }
+    @keyframes pushCartBig {
+      0% { left: -60px; transform: rotate(0deg); }
+      50% { transform: rotate(-8deg); }
       100% { left: 100%; transform: rotate(0deg); }
     }
-    .cart-loading-text {
-      font-size: 13px; font-weight: 700; color: #00875a;
-    }
+
+    /* 🛍️ BIGGER FLYING CART WITH UPWARD MOTION */
     .cart-fly-item {
-      position: fixed; z-index: 3000; font-size: 22px;
-      pointer-events: none; transition: all 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      position: fixed;
+      z-index: 3000;
+      font-size: 32px; /* বড় কার্ট আইকন */
+      pointer-events: none;
+      transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1); /* স্মুথ ও ধীর গতি */
     }
   </style>
 </head>
 <body>
 
-  <!-- 🛒 CART RUNNER OVERLAY -->
+  <!-- 🛒 BIGGER CART RUNNER OVERLAY (No Text) -->
   <div id="cartRunnerOverlay" class="cart-runner-overlay">
-    <div class="cart-loading-text" id="cartRunnerText">SUNNO STORE লোড হচ্ছে...</div>
     <div class="cart-runner-track">
       <div class="cart-runner-icon">🏃‍♂️🛒</div>
     </div>
@@ -443,40 +443,37 @@
 
   <!-- 9. JAVASCRIPT LOGIC -->
   <script>
-    // 🚚 পেজ লোডিং অ্যানিমেশন
+    // 🚚 পেজ লোড এনিমেশন (বড় কার্ট যাবে, কোনো লেখা থাকবে না)
     window.addEventListener('DOMContentLoaded', () => {
       const overlay = document.getElementById('cartRunnerOverlay');
       if (overlay) {
         overlay.classList.add('active');
-        setTimeout(() => overlay.classList.remove('active'), 1200);
+        setTimeout(() => overlay.classList.remove('active'), 1400);
       }
       updateCartCount();
     });
 
-    // 📍 অর্ডার ট্র্যাক ফাংশন
+    // 📍 অর্ডার ট্র্যাকিং এনিমেশন
     function trackOrder() {
       const phoneInput = document.getElementById('trackPhoneInput').value.trim();
       const resultBox = document.getElementById('trackResultBox');
       const overlay = document.getElementById('cartRunnerOverlay');
-      const text = document.getElementById('cartRunnerText');
 
       if (!phoneInput) {
         alert('অনুগ্রহ করে আপনার মোবাইল নম্বর দিন!');
         return;
       }
 
-      // ট্র্যাকিং এনিমেশন
-      text.innerText = "অর্ডার খোঁজা হচ্ছে... 🏃‍♂️";
       overlay.classList.add('active');
 
       setTimeout(() => {
         overlay.classList.remove('active');
         resultBox.style.display = 'block';
         resultBox.innerHTML = `<strong>Status for ${phoneInput}:</strong><br>📦 Order #SN-${Math.floor(1000 + Math.random() * 9000)} is <strong>In Transit (প্রক্রিয়াধীন)</strong>.`;
-      }, 1500);
+      }, 1600);
     }
 
-    // 🔔 পপআপ দেখানোর ফাংশন
+    // 🔔 কাস্টম পপআপ
     function showToast(message) {
       const toast = document.getElementById('toastPopup');
       const toastMsg = document.getElementById('toastMsg');
@@ -485,7 +482,7 @@
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // 🛍️ ফ্লাইং অ্যাড টু কার্ট
+    // 🛍️ আপগ্রেডেড ফ্লাইং অ্যাড-টু-কার্ট (প্রথমে উপরে উঠবে, তারপর ধীরে নিচে যাবে)
     function addToCart(name, price, image, event) {
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
       const existing = cart.find(item => item.name === name);
@@ -498,33 +495,42 @@
 
       localStorage.setItem('sunno_cart', JSON.stringify(cart));
 
-      // ফ্লাইং কার্ট আইকন তৈরি
+      // ফ্লাইং কার্ট এলিমেন্ট
       const flyCart = document.createElement('div');
       flyCart.className = 'cart-fly-item';
       flyCart.innerText = '🛒';
       
       const rect = event.target.getBoundingClientRect();
-      flyCart.style.left = rect.left + 'px';
-      flyCart.style.top = rect.top + 'px';
+      const startX = rect.left + 10;
+      const startY = rect.top - 10;
+
+      flyCart.style.left = startX + 'px';
+      flyCart.style.top = startY + 'px';
       document.body.appendChild(flyCart);
 
       const targetCart = document.getElementById('bottomCartCount').getBoundingClientRect();
-      
+
+      // ধাপ ১: আগে একটু উপরের দিকে লাফ দিবে (Upward Curve)
+      setTimeout(() => {
+        flyCart.style.top = (startY - 60) + 'px'; // ৬০ পিক্সেল উপরে ভাসবে
+      }, 50);
+
+      // ধাপ ২: এরপর ধীরে নিচে ফুটার কার্ট আইকনে চলে যাবে
       setTimeout(() => {
         flyCart.style.left = targetCart.left + 'px';
         flyCart.style.top = targetCart.top + 'px';
-        flyCart.style.scale = '0.2';
-        flyCart.style.opacity = '0.5';
-      }, 50);
+        flyCart.style.transform = 'scale(0.4)';
+        flyCart.style.opacity = '0.7';
+      }, 350);
 
+      // ধাপ ৩: রিমুভ ও কাউন্ট আপডেট
       setTimeout(() => {
         flyCart.remove();
         updateCartCount();
         showToast(name + ' Cart-এ যোগ করা হয়েছে!');
-      }, 850);
+      }, 1200); // অ্যানিমেশন সময় বাড়ানো হয়েছে
     }
 
-    // কার্ট হিসাব আপডেট
     function updateCartCount() {
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
       const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);

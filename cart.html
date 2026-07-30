@@ -189,5 +189,35 @@
     // পেজ লোড হলে কল হবে
     initCart();
   </script>
+ <!-- cart.html এর </body> এর ওপরে এই Overlay ট্যাগটি পেস্ট করবেন -->
+<div id="cartRunnerOverlay" class="cart-runner-overlay">
+  <div class="cart-runner-track">
+    <div class="cart-runner-icon">🏃‍♂️🛒</div>
+  </div>
+</div>
+
+<script>
+  // Order Place করার সময় কার্ট রানার এনিমেশন
+  function placeOrder() {
+    let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
+    
+    if (cart.length === 0) {
+      alert("আপনার কার্ট বর্তমানে খালি!");
+      return;
+    }
+
+    // কার্ট এনিমেশন চালু
+    const overlay = document.getElementById('cartRunnerOverlay');
+    if (overlay) overlay.classList.add('active');
+
+    setTimeout(() => {
+      if (overlay) overlay.classList.remove('active');
+      alert("🎉 আপনার অর্ডার সফলভাবে প্লেস করা হয়েছে!");
+      localStorage.removeItem('sunno_cart'); // কার্ট খালি করা
+      window.location.href = 'index.html'; // হোমপেজে রিডাইরেক্ট
+    }, 2000); // ২ সেকেন্ড ধরে এনিমেশন চলবে
+  }
+</script>
+ 
 </body>
 </html>
