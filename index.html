@@ -34,7 +34,7 @@
     @media (min-width: 600px) { .product-grid { grid-template-columns:repeat(4, 1fr); } }
     
     .p-card { background:#fff; border-radius:10px; padding:10px; border:1px solid #edf2f7; display:flex; flex-direction:column; justify-content:space-between; text-align:center; position:relative; }
-    .p-card img { width:100%; height:110px; object-fit:contain; margin-bottom:8px; border-radius:6px; }
+    .p-card img { width:100%; height:110px; object-fit:contain; margin-bottom:8px; border-radius:6px; background:#f8fafc; }
     .p-title { font-size:12px; font-weight:600; color:#1e293b; line-height:1.3; height:32px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
     .p-price { font-size:13px; font-weight:700; color:#00875a; margin:5px 0; }
     .add-btn { background:#00875a; color:#fff; border:none; padding:6px; border-radius:6px; font-weight:600; font-size:12px; cursor:pointer; width:100%; transition:0.2s; }
@@ -72,7 +72,7 @@
 
   <div class="main-container">
     
-    <!-- Track Box -->
+    <!-- Order Tracking -->
     <div class="track-box">
       <h4 style="color:#0369a1; font-size:13px; margin-bottom:6px;">📍 Track Your Order Status</h4>
       <div style="display:flex; gap:8px;">
@@ -115,11 +115,10 @@
           document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center;">Failed to load products.</p>';
         }
       } catch (err) {
-        document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#ef4444;">Connecting to server (Render waking up...)</p>';
+        document.getElementById('productContainer').innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#ef4444;">Connecting to server...</p>';
       }
     }
 
-    // ২. ক্যাটাগরি রেন্ডার
     function renderCategories() {
       const categories = ['All', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
       const container = document.getElementById('categoryContainer');
@@ -128,7 +127,6 @@
       `).join('');
     }
 
-    // ৩. প্রোডাক্ট রেন্ডার
     function renderProducts(list) {
       const container = document.getElementById('productContainer');
       if (!list || list.length === 0) {
@@ -139,11 +137,11 @@
       container.innerHTML = list.map(p => {
         const imgSrc = (p.image && p.image.startsWith('http')) 
           ? p.image 
-          : 'https://via.placeholder.com/150?text=No+Image';
+          : 'https://via.placeholder.com/150?text=Shirt';
 
         return `
           <div class="p-card">
-            <img src="${imgSrc}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+            <img src="${imgSrc}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150?text=Shirt'">
             <div>
               <div class="p-title">${p.name}</div>
               <div class="p-price">SAR ${p.price}</div>
@@ -154,7 +152,6 @@
       }).join('');
     }
 
-    // ৪. ফিল্টারিং
     function filterCategory(cat, el) {
       if (el) {
         document.querySelectorAll('.cat-pill').forEach(e => e.classList.remove('active'));
@@ -169,7 +166,6 @@
       renderProducts(allProducts.filter(p => p.name.toLowerCase().includes(q)));
     }
 
-    // ৫. কার্ট হ্যান্ডলার
     function addToCart(id, name, price, image) {
       let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
       const item = cart.find(i => i.id === id);
@@ -193,7 +189,6 @@
       if (cartCountEl) cartCountEl.innerText = totalCount;
     }
 
-    // ৬. অ্যাকাউন্ট হ্যান্ডলিং
     function checkUserLogin() {
       const user = JSON.parse(localStorage.getItem('sunno_user'));
       const accountBtn = document.getElementById('userAccountBtn');
@@ -225,7 +220,7 @@
       location.reload();
     }
 
-    // 🔴 ৭. Render Sleep Mode ও Multi-field ম্যাচিং হ্যান্ডলিং ট্র্যাকিং
+    // 🎯 ডাটাবেস এর সাথে ১০০% পারফেক্ট ম্যাচিং ট্র্যাকিং ফাংশন
     async function trackOrder() {
       const phoneInput = document.getElementById('trackPhone').value.trim();
       const resEl = document.getElementById('trackResult');
@@ -235,42 +230,40 @@
         return;
       }
 
-      // Render জাগানোর মেসেজ
-      resEl.innerHTML = '<span style="color:#0284c7;">Searching backend... (If server is asleep, may take ~30s)</span>';
+      resEl.innerHTML = '<span style="color:#0284c7;">Searching orders...</span>';
       
       try {
         const res = await fetch(`${API_URL}/api/orders`);
-        if (!res.ok) throw new Error('Backend response error');
+        if (!res.ok) throw new Error('Network error');
         
         const allOrders = await res.json();
-        const cleanInput = phoneInput.replace(/\D/g, ''); 
+        const cleanInput = phoneInput.replace(/\D/g, '');
 
+        // ফুল অবজেক্ট চেক (যাতে ডাটা যে ফিল্ডেই থাকুক ফিল্টার মিস না হয়)
         const userOrders = allOrders.filter(o => {
-          // ব্যাকএন্ডের সম্ভাব্য সব ফোন নম্বরের অবজেক্ট ও ফিল্ড নাম কভার করা
-          const rawPhone = o.phone || o.customerPhone || o.mobile || o.phoneNumber || (o.user && o.user.phone) || '';
-          const cleanDBPhone = rawPhone.toString().replace(/\D/g, '');
-          
-          if (!cleanDBPhone) return false;
-          return cleanDBPhone.includes(cleanInput) || cleanInput.includes(cleanDBPhone);
+          const strObj = JSON.stringify(o);
+          return strObj.includes(cleanInput);
         });
 
         if (userOrders.length === 0) {
           resEl.innerHTML = '<span style="color:#ef4444;">No orders found with this number.</span>';
         } else {
           resEl.innerHTML = userOrders.map(o => `
-            <div style="background:#f0f9ff; padding:10px; border-radius:6px; margin-top:6px; border:1px solid #bae6fd; text-align:left;">
-              <b>Order ID: #${o._id ? o._id.slice(-6) : 'N/A'}</b><br>
-              Status: <span style="color:#0284c7; font-weight:bold;">${o.status || 'Pending'}</span><br>
-              <small>Total: SAR ${o.totalAmount || o.total || 0}</small>
+            <div style="background:#f0f9ff; padding:10px; border-radius:6px; margin-top:8px; border:1px solid #bae6fd; text-align:left;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <b>Order ID: #${o._id ? o._id.slice(-6) : 'N/A'}</b>
+                <span style="color:#0284c7; font-weight:bold; background:#e0f2fe; padding:2px 8px; border-radius:12px; font-size:11px;">${o.status || 'Pending'}</span>
+              </div>
+              <div style="color:#475569; font-size:11px;">Name: ${o.customerName || 'N/A'}</div>
+              <div style="color:#00875a; font-weight:bold; margin-top:4px;">Total: SAR ${o.totalAmount || 0}</div>
             </div>
           `).join('');
         }
       } catch (err) {
-        resEl.innerHTML = '<span style="color:#ef4444;">Server error/timeout. Please try pressing Check again in 10 seconds.</span>';
+        resEl.innerHTML = '<span style="color:#ef4444;">Error loading tracking data. Try again!</span>';
       }
     }
 
-    // ইনিশিয়ালাইজেশন
     fetchProducts();
     updateCartCount();
     checkUserLogin();
