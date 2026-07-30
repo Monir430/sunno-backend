@@ -3,69 +3,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Sunno Store</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Login / Register - Sunno Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-    body { background:#f8f9fa; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
-    .login-box { background:#fff; padding:25px; border-radius:16px; width:100%; max-width:400px; box-shadow:0 4px 15px rgba(0,0,0,0.05); text-align:center; }
-    .logo { font-size:22px; font-weight:bold; color:#00875a; margin-bottom:20px; }
-    
-    .social-btn { width:100%; padding:12px; border-radius:8px; border:1px solid #cbd5e1; background:#fff; margin-bottom:10px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; font-size:14px; }
-    .btn-google { color:#4285F4; border-color:#4285F4; }
-    .btn-fb { background:#1877F2; color:#fff; border:none; }
-    
-    .divider { margin:15px 0; color:#94a3b8; font-size:12px; display:flex; align-items:center; gap:10px; }
-    .divider::before, .divider::after { content:""; flex:1; height:1px; background:#e2e8f0; }
-
-    input { width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:12px; font-size:14px; outline:none; }
-    .submit-btn { width:100%; padding:12px; background:#00875a; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:15px; cursor:pointer; }
+    body { background:#f1f5f9; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
+    .auth-card { background:#fff; width:100%; max-width:380px; padding:25px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.08); }
+    h2 { text-align:center; color:#00875a; margin-bottom:20px; font-size:20px; }
+    .input-group { margin-bottom:12px; }
+    .input-group label { display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:4px; }
+    .input-group input { width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; outline:none; }
+    .input-group input:focus { border-color:#00875a; }
+    .btn { width:100%; background:#00875a; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; font-size:14px; cursor:pointer; margin-top:10px; }
+    .toggle-text { text-align:center; font-size:12px; color:#64748b; margin-top:15px; }
+    .toggle-text span { color:#00875a; font-weight:600; cursor:pointer; text-decoration:underline; }
+    .error-msg { color:#ef4444; font-size:11px; margin-top:3px; display:none; }
   </style>
 </head>
 <body>
 
-  <div class="login-box">
-    <div class="logo">🛒 SUNNO STORE</div>
-    <h3 style="margin-bottom:15px; font-size:16px; color:#334155;">Login or Create Account</h3>
+  <div class="auth-card">
+    <h2 id="formTitle">🔐 Account Login</h2>
+    <form id="authForm" onsubmit="handleAuth(event)">
+      
+      <div class="input-group" id="nameGroup" style="display:none;">
+        <label>Full Name</label>
+        <input type="text" id="custName" placeholder="Enter full name">
+      </div>
 
-    <!-- Social Login Buttons -->
-    <button class="social-btn btn-google" onclick="socialLogin('Google')">
-      🌐 Continue with Gmail / Google
-    </button>
-    <button class="social-btn btn-fb" onclick="socialLogin('Facebook')">
-      📘 Continue with Facebook
-    </button>
+      <div class="input-group">
+        <label>Gmail Address</label>
+        <input type="email" id="custEmail" placeholder="example@gmail.com" required>
+        <span class="error-msg" id="emailErr">Please enter a valid Gmail address (@gmail.com)</span>
+      </div>
 
-    <div class="divider">OR WITH PHONE</div>
+      <div class="input-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="custPhone" placeholder="05XXXXXXXX" required>
+        <span class="error-msg" id="phoneErr">Please enter a valid phone number</span>
+      </div>
 
-    <!-- Phone Number Login -->
-    <input type="text" id="userPhone" placeholder="Mobile Number (e.g. 05xxxxxxx)">
-    <input type="text" id="userName" placeholder="Your Name">
-    <button class="submit-btn" onclick="phoneLogin()">Continue</button>
+      <div class="input-group" id="fbGroup" style="display:none;">
+        <label>Facebook Profile / Username</label>
+        <input type="text" id="custFb" placeholder="facebook.com/username or Username">
+        <span class="error-msg" id="fbErr">Please enter a valid Facebook ID or Profile URL</span>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">Login</button>
+    </form>
+
+    <div class="toggle-text">
+      <span id="toggleBtn" onclick="toggleMode()">Don't have an account? Register here</span>
+    </div>
   </div>
 
   <script>
-    function socialLogin(provider) {
-      const name = prompt(`Enter your Name for ${provider} Login:`);
-      if(name) {
-        localStorage.setItem('sunno_user', JSON.stringify({ name, loginType: provider }));
-        alert(`Successfully logged in with ${provider}!`);
-        window.location.href = 'cart.html';
-      }
+    let isRegisterMode = false;
+
+    function toggleMode() {
+      isRegisterMode = !isRegisterMode;
+      document.getElementById('formTitle').innerText = isRegisterMode ? '📝 Create Account' : '🔐 Account Login';
+      document.getElementById('nameGroup').style.display = isRegisterMode ? 'block' : 'none';
+      document.getElementById('fbGroup').style.display = isRegisterMode ? 'block' : 'none';
+      document.getElementById('submitBtn').innerText = isRegisterMode ? 'Register' : 'Login';
+      document.getElementById('toggleBtn').innerText = isRegisterMode ? 'Already have an account? Login' : "Don't have an account? Register here";
     }
 
-    function phoneLogin() {
-      const phone = document.getElementById('userPhone').value;
-      const name = document.getElementById('userName').value;
-      
-      if(!phone || !name) {
-        alert('Please enter Name and Mobile Number!');
+    function handleAuth(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('custEmail').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const name = document.getElementById('custName').value.trim();
+      const fb = document.getElementById('custFb').value.trim();
+
+      // ১. জিমেইল ভ্যালিডেশন
+      if (!email.toLowerCase().endsWith('@gmail.com')) {
+        alert('❌ Please enter a valid Gmail address ending with @gmail.com!');
         return;
       }
 
-      localStorage.setItem('sunno_user', JSON.stringify({ name, phone, loginType: 'Phone' }));
-      alert('Login Successful!');
-      window.location.href = 'cart.html';
+      // ২. ফোন নম্বর ভ্যালিডেশন
+      if (phone.length < 8) {
+        alert('❌ Please enter a valid mobile number!');
+        return;
+      }
+
+      // ৩. সাইনআপ এর সময় ফেসবুক আইডি চেক
+      if (isRegisterMode) {
+        if (!name) {
+          alert('❌ Please enter your full name!');
+          return;
+        }
+        if (!fb || fb.length < 3) {
+          alert('❌ Please enter a valid Facebook username or link!');
+          return;
+        }
+      }
+
+      // ডাটা অবজেক্ট
+      const userData = {
+        name: name || email.split('@')[0],
+        email: email,
+        phone: phone,
+        facebook: fb || 'Not provided'
+      };
+
+      // LocalStorage-এ ইউজার সেভ করা
+      localStorage.setItem('sunno_user', JSON.stringify(userData));
+
+      alert('✅ Login Successful!');
+      window.location.href = 'index.html'; // হোমপেজে রিডাইরেক্ট
     }
   </script>
 </body>
