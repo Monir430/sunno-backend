@@ -296,14 +296,14 @@
       font-size: 11px;
     }
 
-    /* ✨ PREMIUM GLASS LOADER OVERLAY */
+    /* ✨ WHITE LOADER OVERLAY */
     .cart-runner-overlay {
       position: fixed;
       top: 0; 
       left: 0; 
       width: 100vw; 
       height: 100vh;
-      background: rgba(15, 23, 42, 0.35);
+      background: rgba(15, 23, 42, 0.4);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       display: flex; 
@@ -312,7 +312,7 @@
       z-index: 9999;
       opacity: 0; 
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
     .cart-runner-overlay.active {
@@ -320,89 +320,89 @@
       pointer-events: all;
     }
 
-    /* 📦 CENTERED PREMIUM CARD */
+    /* 📦 WHITE CARD FROM YOUR SCREENSHOT */
     .walking-card {
       background: #ffffff;
-      padding: 30px 20px 20px 20px;
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-      width: 88%;
-      max-width: 320px;
+      padding: 35px 25px 25px 25px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      width: 85%;
+      max-width: 310px;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.8);
+      position: relative;
     }
 
     .walking-track-container {
       width: 100%;
-      height: 70px;
+      height: 65px;
       position: relative;
       overflow: hidden;
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       border-bottom: 2px solid #e2e8f0;
     }
 
-    /* 🔤 SUNNO TEXT TRACK */
+    /* 🔤 SUNNO STORE BRAND TEXT */
     .sunno-track-text {
-      font-size: 32px;
-      font-weight: 900;
-      color: #00875a;
-      letter-spacing: 6px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      opacity: 0.2;
-      margin-bottom: 2px;
+      opacity: 0.25;
+      margin-bottom: 6px;
       user-select: none;
     }
 
-    /* 🚶‍♂️ REALISTIC WALKING CHARACTER WITH BAG */
+    /* 🚶‍♂️ FAST REALISTIC WALKING CHARACTER WITH BAG */
     .walker-wrapper {
       position: absolute;
       bottom: 0;
-      left: -40px;
-      width: 35px;
-      height: 50px;
+      left: -35px;
+      width: 32px;
+      height: 48px;
     }
 
+    /* ⏱️ FAST ANIMATION TIME: 1.4 seconds */
     .cart-runner-overlay.active .walker-wrapper {
-      animation: moveAcross 2.2s linear infinite;
+      animation: moveAcross 1.4s linear infinite;
     }
 
     @keyframes moveAcross {
-      0% { left: -40px; }
+      0% { left: -35px; }
       100% { left: 100%; }
     }
 
-    /* SVG Limb Animations for Realistic Walk */
+    /* SVG Fast Limb Movement */
     .cart-runner-overlay.active .leg-left {
-      animation: legWalk 0.6s ease-in-out infinite alternate;
-      transform-origin: 18px 30px;
+      animation: legWalk 0.35s ease-in-out infinite alternate;
+      transform-origin: 18px 28px;
     }
     .cart-runner-overlay.active .leg-right {
-      animation: legWalk 0.6s ease-in-out infinite alternate-reverse;
-      transform-origin: 18px 30px;
+      animation: legWalk 0.35s ease-in-out infinite alternate-reverse;
+      transform-origin: 18px 28px;
     }
     .cart-runner-overlay.active .arm-bag {
-      animation: armSwing 0.6s ease-in-out infinite alternate;
+      animation: armSwing 0.35s ease-in-out infinite alternate;
       transform-origin: 20px 16px;
     }
 
     @keyframes legWalk {
-      0% { transform: rotate(-25deg); }
-      100% { transform: rotate(25deg); }
+      0% { transform: rotate(-28deg); }
+      100% { transform: rotate(28deg); }
     }
 
     @keyframes armSwing {
-      0% { transform: rotate(15deg); }
-      100% { transform: rotate(-15deg); }
+      0% { transform: rotate(18deg); }
+      100% { transform: rotate(-18deg); }
     }
 
     .loader-status-text {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
-      color: #475569;
-      letter-spacing: 0.5px;
+      color: #64748b;
     }
 
     /* 🛍️ FLYING CART ANIMATION */
@@ -411,48 +411,35 @@
       z-index: 3000;
       font-size: 28px;
       pointer-events: none;
-      transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
     }
   </style>
 </head>
 <body>
 
-  <!-- ✨ REALISTIC WALKING OVERLAY -->
+  <!-- ✨ REALISTIC FAST WALKING OVERLAY -->
   <div id="cartRunnerOverlay" class="cart-runner-overlay">
     <div class="walking-card">
       <div class="walking-track-container">
         
         <!-- REALISTIC CHARACTER WITH SHOPPING BAG -->
         <div class="walker-wrapper">
-          <svg viewBox="0 0 40 60" width="35" height="50">
-            <!-- Head -->
+          <svg viewBox="0 0 40 60" width="32" height="48">
             <circle cx="20" cy="8" r="5" fill="#00875a" />
-            
-            <!-- Body/Torso -->
             <line x1="20" y1="13" x2="18" y2="30" stroke="#00875a" stroke-width="3.5" stroke-linecap="round" />
-            
-            <!-- Left Leg -->
             <line class="leg-left" x1="18" y1="30" x2="10" y2="48" stroke="#00875a" stroke-width="3" stroke-linecap="round" />
-            
-            <!-- Right Leg -->
             <line class="leg-right" x1="18" y1="30" x2="26" y2="48" stroke="#00875a" stroke-width="3" stroke-linecap="round" />
-            
-            <!-- Left Arm (Normal Swing) -->
             <line x1="20" y1="16" x2="12" y2="26" stroke="#00875a" stroke-width="2.5" stroke-linecap="round" />
-            
-            <!-- Right Arm Holding Shopping Bag -->
             <g class="arm-bag">
               <line x1="20" y1="16" x2="27" y2="27" stroke="#00875a" stroke-width="2.5" stroke-linecap="round" />
-              <!-- Shopping Bag -->
               <rect x="23" y="27" width="9" height="11" rx="2" fill="#00875a" />
-              <!-- Bag Handle -->
               <path d="M25 27 C25 24, 30 24, 30 27" fill="none" stroke="#00875a" stroke-width="1.2" />
             </g>
           </svg>
         </div>
 
-        <!-- SUNNO TEXT ON TRACK -->
-        <div class="sunno-track-text">SUNNO</div>
+        <!-- SUNNO STORE TEXT -->
+        <div class="sunno-track-text">SUNNO STORE</div>
       </div>
 
       <div class="loader-status-text">Loading Store...</div>
@@ -564,12 +551,12 @@
   </div>
 
   <script>
-    // Page Load Animation
+    // Fast Page Load Animation (1.4s)
     window.addEventListener('DOMContentLoaded', () => {
       const overlay = document.getElementById('cartRunnerOverlay');
       if (overlay) {
         overlay.classList.add('active');
-        setTimeout(() => overlay.classList.remove('active'), 1800);
+        setTimeout(() => overlay.classList.remove('active'), 1400);
       }
       updateCartCount();
     });
@@ -591,7 +578,7 @@
         overlay.classList.remove('active');
         resultBox.style.display = 'block';
         resultBox.innerHTML = `<strong>Status for ${phoneInput}:</strong><br>📦 Order #SN-${Math.floor(1000 + Math.random() * 9000)} is <strong>In Transit (প্রক্রিয়াধীন)</strong>.`;
-      }, 1800);
+      }, 1400);
     }
 
     // Toast Popup
@@ -600,7 +587,7 @@
       const toastMsg = document.getElementById('toastMsg');
       toastMsg.innerText = message;
       toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
+      setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
     // Upward Flying Add to Cart
@@ -631,21 +618,21 @@
       const targetCart = document.getElementById('bottomCartCount').getBoundingClientRect();
 
       setTimeout(() => {
-        flyCart.style.top = (startY - 60) + 'px'; 
-      }, 50);
+        flyCart.style.top = (startY - 50) + 'px'; 
+      }, 40);
 
       setTimeout(() => {
         flyCart.style.left = targetCart.left + 'px';
         flyCart.style.top = targetCart.top + 'px';
         flyCart.style.transform = 'scale(0.4)';
         flyCart.style.opacity = '0.7';
-      }, 350);
+      }, 300);
 
       setTimeout(() => {
         flyCart.remove();
         updateCartCount();
         showToast(name + ' Cart-এ যোগ করা হয়েছে!');
-      }, 1000);
+      }, 850);
     }
 
     function updateCartCount() {
