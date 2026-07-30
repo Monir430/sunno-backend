@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SUNNO STORE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
     * {
@@ -208,7 +208,6 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
     }
 
     /* 📌 FOOTER STYLES */
@@ -297,92 +296,78 @@
       font-size: 11px;
     }
 
-    /* 💎 ULTRA-PREMIUM GLASS OVERLAY */
+    /* ✨ CLEAR OVERLAY (NO BLUR, PERFECTLY TRANSPARENT BACKGROUND) */
     .cart-runner-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.4); /* সম্পূর্ণ ক্লিয়ার হালকা ব্যাকগ্রাউন্ড */
       display: flex; justify-content: center; align-items: center;
       z-index: 9999;
       opacity: 0; pointer-events: none;
-      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.3s ease;
     }
 
     .cart-runner-overlay.active {
       opacity: 1; pointer-events: all;
     }
 
-    .premium-loader-card {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 30px 40px;
-      border-radius: 24px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    /* 🚶‍♂️🛍️ WALKING SHOPPER OVER "SUNNO" TRACK */
+    .walking-track-container {
+      width: 100%;
+      max-width: 360px;
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
-      max-width: 320px;
-      width: 85%;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      transform: scale(0.9);
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .cart-runner-overlay.active .premium-loader-card {
-      transform: scale(1);
-    }
-
-    .svg-cart-icon {
-      width: 56px;
-      height: 56px;
+    /* SUNNO BOLD TEXT LINE */
+    .sunno-track-text {
+      font-size: 42px;
+      font-weight: 900;
       color: #00875a;
-      animation: bounceCart 1.2s ease-in-out infinite alternate;
-    }
-
-    @keyframes bounceCart {
-      0% { transform: translateY(0) rotate(0deg); }
-      100% { transform: translateY(-8deg) rotate(-3deg); }
-    }
-
-    .progress-track {
+      letter-spacing: 12px;
+      text-transform: uppercase;
+      opacity: 0.15; /* ব্যাকগ্রাউন্ডের সাথে প্রিমিয়াম ওয়াটারমার্ক ফিল */
+      border-bottom: 2px solid #00875a;
       width: 100%;
-      height: 6px;
-      background: #e2e8f0;
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
+      text-align: center;
+      padding-bottom: 4px;
+      line-height: 1;
     }
 
-    .progress-fill {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, #00875a, #10b981, #34d399);
-      border-radius: 10px;
+    /* MOVING PERSON WITH BAG SVG */
+    .walking-person {
       position: absolute;
-      left: -100%;
-      animation: shimmerProgress 1.6s ease-in-out infinite;
+      bottom: 2px;
+      left: -50px;
+      width: 45px;
+      height: 45px;
+      color: #00875a;
     }
 
-    @keyframes shimmerProgress {
-      0% { left: -100%; }
-      50% { left: 0%; }
-      100% { left: 100%; }
+    .cart-runner-overlay.active .walking-person {
+      animation: walkAcrossSunno 1.8s linear infinite;
     }
 
-    .loader-title {
-      font-size: 15px;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -0.3px;
-    }
-
-    .loader-subtext {
-      font-size: 12px;
-      color: #64748b;
-      font-weight: 500;
-      margin-top: -8px;
+    @keyframes walkAcrossSunno {
+      0% {
+        left: -50px;
+        transform: translateY(0);
+      }
+      25% {
+        transform: translateY(-3px);
+      }
+      50% {
+        transform: translateY(0);
+      }
+      75% {
+        transform: translateY(-3px);
+      }
+      100% {
+        left: 100%;
+        transform: translateY(0);
+      }
     }
 
     /* 🛍️ FLYING CART ANIMATION */
@@ -397,19 +382,20 @@
 </head>
 <body>
 
-  <!-- 💎 ULTRA-PREMIUM LOADER OVERLAY -->
+  <!-- ✨ CLEAR & TRANSPARENT WALKING OVERLAY -->
   <div id="cartRunnerOverlay" class="cart-runner-overlay">
-    <div class="premium-loader-card">
-      <svg class="svg-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="9" cy="21" r="1"></circle>
-        <circle cx="20" cy="21" r="1"></circle>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+    <div class="walking-track-container">
+      
+      <!-- PERSON WITH SHOPPING BAG VECTOR SVG -->
+      <svg class="walking-person" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="4" r="2"></circle>
+        <path d="M10 8h4l1 6h-2l-1 6h-2l1-6h-2z"></path>
+        <!-- Shopping Bag -->
+        <path d="M16 11l2 1v4a1 1 0 0 1-1 1h-2" stroke-width="1.5"></path>
       </svg>
-      <div class="loader-title">SUNNO STORE</div>
-      <div class="loader-subtext" id="loaderSubtext">Processing...</div>
-      <div class="progress-track">
-        <div class="progress-fill"></div>
-      </div>
+
+      <!-- SUNNO WATERMARK TRACK -->
+      <div class="sunno-track-text">SUNNO</div>
     </div>
   </div>
 
@@ -521,11 +507,9 @@
     // Page Load Animation
     window.addEventListener('DOMContentLoaded', () => {
       const overlay = document.getElementById('cartRunnerOverlay');
-      const subtext = document.getElementById('loaderSubtext');
       if (overlay) {
-        subtext.innerText = "Loading Store...";
         overlay.classList.add('active');
-        setTimeout(() => overlay.classList.remove('active'), 1200);
+        setTimeout(() => overlay.classList.remove('active'), 1400);
       }
       updateCartCount();
     });
@@ -535,21 +519,19 @@
       const phoneInput = document.getElementById('trackPhoneInput').value.trim();
       const resultBox = document.getElementById('trackResultBox');
       const overlay = document.getElementById('cartRunnerOverlay');
-      const subtext = document.getElementById('loaderSubtext');
 
       if (!phoneInput) {
         alert('অনুগ্রহ করে আপনার মোবাইল নম্বর দিন!');
         return;
       }
 
-      subtext.innerText = "Tracking Order...";
       overlay.classList.add('active');
 
       setTimeout(() => {
         overlay.classList.remove('active');
         resultBox.style.display = 'block';
         resultBox.innerHTML = `<strong>Status for ${phoneInput}:</strong><br>📦 Order #SN-${Math.floor(1000 + Math.random() * 9000)} is <strong>In Transit (প্রক্রিয়াধীন)</strong>.`;
-      }, 1400);
+      }, 1600);
     }
 
     // Toast Popup
