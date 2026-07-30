@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Sunno Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body { background:#f8f9fa; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
+    .login-box { background:#fff; padding:25px; border-radius:16px; width:100%; max-width:400px; box-shadow:0 4px 15px rgba(0,0,0,0.05); text-align:center; }
+    .logo { font-size:22px; font-weight:bold; color:#00875a; margin-bottom:20px; }
+    
+    .social-btn { width:100%; padding:12px; border-radius:8px; border:1px solid #cbd5e1; background:#fff; margin-bottom:10px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; font-size:14px; }
+    .btn-google { color:#4285F4; border-color:#4285F4; }
+    .btn-fb { background:#1877F2; color:#fff; border:none; }
+    
+    .divider { margin:15px 0; color:#94a3b8; font-size:12px; display:flex; align-items:center; gap:10px; }
+    .divider::before, .divider::after { content:""; flex:1; height:1px; background:#e2e8f0; }
+
+    input { width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:12px; font-size:14px; outline:none; }
+    .submit-btn { width:100%; padding:12px; background:#00875a; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:15px; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <div class="logo">🛒 SUNNO STORE</div>
+    <h3 style="margin-bottom:15px; font-size:16px; color:#334155;">Login or Create Account</h3>
+
+    <!-- Social Login Buttons -->
+    <button class="social-btn btn-google" onclick="socialLogin('Google')">
+      🌐 Continue with Gmail / Google
+    </button>
+    <button class="social-btn btn-fb" onclick="socialLogin('Facebook')">
+      📘 Continue with Facebook
+    </button>
+
+    <div class="divider">OR WITH PHONE</div>
+
+    <!-- Phone Number Login -->
+    <input type="text" id="userPhone" placeholder="Mobile Number (e.g. 05xxxxxxx)">
+    <input type="text" id="userName" placeholder="Your Name">
+    <button class="submit-btn" onclick="phoneLogin()">Continue</button>
+  </div>
+
+  <script>
+    function socialLogin(provider) {
+      const name = prompt(`Enter your Name for ${provider} Login:`);
+      if(name) {
+        localStorage.setItem('sunno_user', JSON.stringify({ name, loginType: provider }));
+        alert(`Successfully logged in with ${provider}!`);
+        window.location.href = 'cart.html';
+      }
+    }
+
+    function phoneLogin() {
+      const phone = document.getElementById('userPhone').value;
+      const name = document.getElementById('userName').value;
+      
+      if(!phone || !name) {
+        alert('Please enter Name and Mobile Number!');
+        return;
+      }
+
+      localStorage.setItem('sunno_user', JSON.stringify({ name, phone, loginType: 'Phone' }));
+      alert('Login Successful!');
+      window.location.href = 'cart.html';
+    }
+  </script>
+</body>
+</html>

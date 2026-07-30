@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Cart - Sunno Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body { background:#f8f9fa; color:#333; padding-bottom:100px; }
+    header { background:#fff; padding:15px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
+    .back-btn { text-decoration:none; color:#00875a; font-weight:600; font-size:14px; }
+    .cart-header { display:flex; justify-content:space-between; align-items:center; margin:20px 15px 10px; }
+    .clear-btn { background:none; border:1px solid #00875a; color:#00875a; padding:6px 14px; border-radius:20px; font-weight:600; cursor:pointer; }
+    
+    .cart-card { background:#fff; margin:10px 15px; padding:12px; border-radius:12px; border:1px solid #edf2f7; display:flex; gap:12px; align-items:center; }
+    .cart-card img { width:70px; height:70px; object-fit:contain; }
+    .cart-info { flex:1; }
+    .cart-title { font-size:13px; font-weight:600; color:#1e293b; margin-bottom:4px; }
+    .cart-price { font-size:14px; font-weight:700; color:#00875a; }
+    
+    .qty-controls { display:flex; align-items:center; gap:10px; margin-top:8px; }
+    .qty-btn { background:#f1f5f9; border:1px solid #cbd5e1; width:28px; height:28px; border-radius:6px; font-weight:bold; cursor:pointer; }
+    .del-btn { background:#fee2e2; border:none; color:#dc2626; padding:6px 10px; border-radius:6px; cursor:pointer; margin-left:auto; }
+
+    .bottom-checkout { position:fixed; bottom:0; left:0; right:0; background:#fff; padding:15px; box-shadow:0 -4px 10px rgba(0,0,0,0.05); }
+    .checkout-btn { background:#00875a; color:#fff; border:none; width:100%; padding:14px; border-radius:10px; font-weight:bold; font-size:15px; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="back-btn">❮ Continue Shopping</a>
+    <h3 style="font-size:16px;">My Cart</h3>
+  </header>
+
+  <div class="cart-header">
+    <h4>Items in Cart (<span id="totalItems">0</span>)</h4>
+    <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+  </div>
+
+  <div id="cartItemsContainer">Loading Cart...</div>
+
+  <div class="bottom-checkout">
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+      <span>Total (incl. VAT):</span>
+      <b style="color:#00875a; font-size:18px;">SAR <span id="cartTotal">0.00</span></b>
+    </div>
+    <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
+  </div>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem('sunno_cart')) || [];
+
+    function renderCart() {
+      const container = document.getElementById('cartItemsContainer');
+      let total = 0;
+      let count = 0;
+
+      if(cart.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:40px; color:#64748b;">Your cart is empty.</div>';
+        document.getElementById('cartTotal').innerText = '0.00';
+        document.getElementById('totalItems').innerText = '0';
+        return;
+      }
+
+      container.innerHTML = cart.map((item, index) => {
+        total += item.price * item.qty;
+        count += item.qty;
+        return `
+          <div class="cart-card">
+            <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.name}">
+            <div class="cart-info">
+              <div class="cart-title">${item.name}</div>
+              <div class="cart-price">SAR ${item.price}</div>
+              <div class="qty-controls">
+                <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                <span><b>${item.qty}</b></span>
+                <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+              </div>
+            </div>
+            <button class="del-btn" onclick="removeItem(${index})">🗑️</button>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('cartTotal').innerText = total.toFixed(2);
+      document.getElementById('totalItems').innerText = count;
+    }
+
+    function updateQty(index, change) {
+      cart[index].qty += change;
+      if(cart[index].qty <= 0) cart.splice(index, 1);
+      saveCart();
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      saveCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      saveCart();
+    }
+
+    function saveCart() {
+      localStorage.setItem('sunno_cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function goToCheckout() {
+      if(cart.length === 0) { alert('Your cart is empty!'); return; }
+      window.location.href = 'login.html'; // আগে লগইন পেজে নিয়ে যাবে
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
