@@ -196,7 +196,7 @@
       if (cartCountEl) cartCountEl.innerText = totalCount;
     }
 
-    // ২. ইউজার লগইন চেক এবং পপ-আপ ইনফো সেটআপ
+    // ২. ইউজার লগইন চেক এবং পপ-আপ ইনফো
     function checkUserLogin() {
       const user = JSON.parse(localStorage.getItem('sunno_user'));
       const accountBtn = document.getElementById('userAccountBtn');
@@ -232,7 +232,7 @@
       location.reload();
     }
 
-    // ৩. অর্ডার ট্র্যাকিং
+    // ৩. সম্পূর্ণ ফিক্স করা অর্ডার ট্র্যাকিং ফাংশন
     async function trackOrder() {
       const phoneInput = document.getElementById('trackPhone').value.trim();
       const resEl = document.getElementById('trackResult');
@@ -245,26 +245,46 @@
       resEl.innerHTML = 'Searching orders...';
       
       try {
-        const res = await fetch(`${API_URL}/api/orders`);
-        if (!res.ok) throw new Error('Network error');
+        // মেথড ১: ব্যাকএন্ড ট্র্যাকিং API দিয়ে ফেচ
+        const res = await fetch(`${API_URL}/api/orders/track/${phoneInput}`);
         
-        const allOrders = await res.json();
-        const userOrders = allOrders.filter(o => o.phone && o.phone.toString().includes(phoneInput));
+        if (res.ok) {
+          const orders = await res.json();
+          if (orders && orders.length > 0) {
+            displayTrackResults(orders, resEl);
+            return;
+          }
+        }
+        
+        // মেথড ২ (ব্যাকআপ): সব অর্ডার এনে নম্বর দিয়ে ফিল্টার করা
+        const fallbackRes = await fetch(`${API_URL}/api/orders`);
+        if (!fallbackRes.ok) throw new Error('Failed to connect');
+        
+        const allOrders = await fallbackRes.json();
+        const userOrders = allOrders.filter(o => 
+          o.phone && o.phone.toString().trim().includes(phoneInput)
+        );
 
         if (userOrders.length === 0) {
           resEl.innerHTML = '<span style="color:#ef4444;">No orders found with this number.</span>';
         } else {
-          resEl.innerHTML = userOrders.map(o => `
-            <div style="background:#f0f9ff; padding:10px; border-radius:6px; margin-top:6px; border:1px solid #bae6fd;">
-              <b>Order #${o._id ? o._id.slice(-6) : 'N/A'}</b><br>
-              Status: <span style="color:#0284c7; font-weight:bold;">${o.status || 'Pending'}</span><br>
-              <small>Total Amount: SAR ${o.totalAmount || 0}</small>
-            </div>
-          `).join('');
+          displayTrackResults(userOrders, resEl);
         }
+
       } catch (err) {
-        resEl.innerHTML = '<span style="color:#ef4444;">Could not fetch tracking status. Try again later.</span>';
+        resEl.innerHTML = '<span style="color:#ef4444;">Could not fetch tracking status. Try again.</span>';
       }
+    }
+
+    // ট্র্যাকিং রেজাল্ট দেখানোর হেল্পার ফাংশন
+    function displayTrackResults(orders, element) {
+      element.innerHTML = orders.map(o => `
+        <div style="background:#f0f9ff; padding:10px; border-radius:6px; margin-top:6px; border:1px solid #bae6fd;">
+          <b>Order ID: #${o._id ? o._id.slice(-6) : 'N/A'}</b><br>
+          Status: <span style="color:#0284c7; font-weight:bold;">${o.status || 'Pending'}</span><br>
+          <small>Total Amount: SAR ${o.totalAmount || 0}</small>
+        </div>
+      `).join('');
     }
 
     // পেজ লোড হলে রান হবে
