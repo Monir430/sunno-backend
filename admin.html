@@ -9,12 +9,13 @@
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
     body { background:#f4f6f8; padding:15px; }
     .box { background:white; padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid #ddd; }
-    input { width:100%; padding:10px; margin:5px 0 10px; border:1px solid #ccc; border-radius:4px; }
-    button { background:#1a252f; color:white; border:none; padding:10px 18px; border-radius:4px; cursor:pointer; font-weight:600; width:100%; }
-    table { width:100%; border-collapse:collapse; margin-top:15px; font-size:14px; }
+    input, select { width:100%; padding:10px; margin:5px 0 10px; border:1px solid #ccc; border-radius:4px; }
+    button { background:#00875a; color:white; border:none; padding:10px 18px; border-radius:4px; cursor:pointer; font-weight:600; width:100%; }
+    table { width:100%; border-collapse:collapse; margin-top:15px; font-size:13px; }
     th, td { border:1px solid #ddd; padding:8px; text-align:left; }
     th { background:#1a252f; color:white; }
     .table-container { overflow-x:auto; }
+    .btn-danger { background:#dc3545; padding:4px 8px; font-size:12px; width:auto; border-radius:3px; }
   </style>
 </head>
 <body>
@@ -22,21 +23,42 @@
   <h2>👨‍💼 Admin Dashboard</h2>
   <br>
 
-  <!-- Product Add Form -->
+  <!-- Add Product -->
   <div class="box">
     <h3>➕ Add New Product</h3>
     <br>
-    <input type="text" id="pName" placeholder="Product Name (e.g. T-Shirt)">
+    <input type="text" id="pName" placeholder="Product Name">
     <input type="number" id="pPrice" placeholder="Price (SAR)">
-    <input type="text" id="pCat" placeholder="Category">
+    <input type="text" id="pCat" placeholder="Category (e.g. Fresh, Household, Electronics)">
     <input type="number" id="pStock" placeholder="Stock Quantity">
-    <input type="text" id="pImg" placeholder="Image URL (Link)">
+    <input type="text" id="pImg" placeholder="Image URL">
     <button onclick="addProduct()">Save Product</button>
   </div>
 
-  <!-- Orders Table -->
+  <!-- Manage Products -->
   <div class="box">
-    <h3>📦 Live Customer Orders</h3>
+    <h3>🛍️ Manage Products List</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="productsTable">
+          <tr><td colspan="5">Loading products...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Manage Orders -->
+  <div class="box">
+    <h3>📦 Manage Customer Orders</h3>
     <div class="table-container">
       <table>
         <thead>
@@ -46,10 +68,11 @@
             <th>Items Ordered</th>
             <th>Total</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="ordersTable">
-          <tr><td colspan="5">Loading orders...</td></tr>
+          <tr><td colspan="6">Loading orders...</td></tr>
         </tbody>
       </table>
     </div>
@@ -67,8 +90,8 @@
     async function addProduct() {
       const name = document.getElementById('pName').value;
       const price = document.getElementById('pPrice').value;
-      const category = document.getElementById('pCat').value;
-      const stock = document.getElementById('pStock').value;
+      const category = document.getElementById('pCat').value || 'General';
+      const stock = document.getElementById('pStock').value || 10;
       const image = document.getElementById('pImg').value || 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300';
 
       if(!name || !price) {
@@ -76,65 +99,102 @@
         return;
       }
 
-      const payload = { name, price: Number(price), category, stock: Number(stock), image };
-
       try {
-        let res = await fetch(`${API_URL}/api/products`, {
+        const res = await fetch(`${API_URL}/api/products`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({ name, price: Number(price), category, stock: Number(stock), image })
         });
-
-        if (!res.ok) {
-          res = await fetch(`${API_URL}/products`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-        }
 
         if(res.ok) {
           alert('New Product Added Successfully!');
           location.reload();
-        } else {
-          alert('Failed to add product.');
         }
-      } catch(err) {
-        alert('Error connecting to server.');
+      } catch(err) { alert('Error adding product.'); }
+    }
+
+    async function loadProducts() {
+      const tbody = document.getElementById('productsTable');
+      try {
+        const res = await fetch(`${API_URL}/api/products`);
+        const products = await res.json();
+        
+        if(!products || products.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5">No products found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = products.map(p => `
+          <tr>
+            <td><b>${p.name}</b></td>
+            <td>${p.category || 'General'}</td>
+            <td>SAR ${p.price}</td>
+            <td>${p.stock}</td>
+            <td>
+              <button class="btn-danger" onclick="deleteProduct('${p._id}')">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch(err) { tbody.innerHTML = '<tr><td colspan="5">Failed to load.</td></tr>'; }
+    }
+
+    async function deleteProduct(id) {
+      if(confirm('Are you sure you want to delete this product?')) {
+        await fetch(`${API_URL}/api/products/${id}`, { method: 'DELETE' });
+        loadProducts();
       }
     }
 
     async function loadOrders() {
       const tbody = document.getElementById('ordersTable');
-      let orders = null;
-
       try {
-        let res = await fetch(`${API_URL}/api/orders`);
-        if(res.ok) orders = await res.json();
-        else {
-          res = await fetch(`${API_URL}/orders`);
-          if(res.ok) orders = await res.json();
-        }
+        const res = await fetch(`${API_URL}/api/orders`);
+        const orders = await res.json();
         
         if(!orders || orders.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5">No orders found yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6">No orders found.</td></tr>';
           return;
         }
 
         tbody.innerHTML = orders.map(o => `
           <tr>
             <td>#${o._id ? o._id.slice(-6) : 'N/A'}</td>
-            <td><b>${o.customerName || 'N/A'}</b><br>${o.phone || ''}<br><small>${o.address || ''}</small></td>
+            <td><b>${o.customerName}</b><br>${o.phone}<br><small>${o.address}</small></td>
             <td>${o.items ? o.items.map(i => `${i.name} (x${i.qty})`).join(', ') : ''}</td>
-            <td><b>SAR ${o.totalAmount || 0}</b></td>
-            <td style="color:orange; font-weight:bold;">${o.status || 'Pending'}</td>
+            <td><b>SAR ${o.totalAmount}</b></td>
+            <td>
+              <select onchange="updateOrderStatus('${o._id}', this.value)" style="padding:4px; font-size:12px;">
+                <option value="Pending" ${o.status==='Pending'?'selected':''}>Pending</option>
+                <option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
+                <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
+                <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+              </select>
+            </td>
+            <td>
+              <button class="btn-danger" onclick="deleteOrder('${o._id}')">Delete</button>
+            </td>
           </tr>
         `).join('');
-      } catch(err) {
-        tbody.innerHTML = '<tr><td colspan="5" style="color:red;">Failed to connect to server.</td></tr>';
+      } catch(err) { tbody.innerHTML = '<tr><td colspan="6">Failed to load.</td></tr>'; }
+    }
+
+    async function updateOrderStatus(id, status) {
+      await fetch(`${API_URL}/api/orders/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      alert('Order status updated!');
+    }
+
+    async function deleteOrder(id) {
+      if(confirm('Delete this order record?')) {
+        await fetch(`${API_URL}/api/orders/${id}`, { method: 'DELETE' });
+        loadOrders();
       }
     }
 
+    loadProducts();
     loadOrders();
   </script>
 </body>

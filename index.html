@@ -3,220 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sunno Store - Online Grocery & Superstore</title>
+  <title>Sunno Store - Online Superstore</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
     body { background: #f8f9fa; color: #333; padding-bottom: 30px; }
 
-    /* Top Navigation Bar */
     header {
-      background: #ffffff;
-      padding: 12px 16px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: #ffffff; padding: 12px 16px; position: sticky; top: 0; z-index: 100;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
-    .nav-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .logo {
-      font-size: 20px;
-      font-weight: 700;
-      color: #00875a;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .search-box {
-      margin-top: 10px;
-      position: relative;
-    }
+    .nav-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .logo { font-size: 20px; font-weight: 700; color: #00875a; }
+    .search-box { margin-top: 10px; position: relative; }
     .search-box input {
-      width: 100%;
-      padding: 10px 14px 10px 38px;
-      border: 1px solid #e2e8f0;
-      border-radius: 20px;
-      background: #f1f5f9;
-      font-size: 14px;
-      outline: none;
+      width: 100%; padding: 10px 14px 10px 38px; border: 1px solid #e2e8f0;
+      border-radius: 20px; background: #f1f5f9; font-size: 14px; outline: none;
     }
-    .search-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #64748b;
-    }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748b; }
     .cart-btn {
-      background: #e8f5e9;
-      color: #00875a;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
+      background: #e8f5e9; color: #00875a; padding: 8px 14px; border-radius: 20px;
+      font-weight: 600; font-size: 14px; cursor: pointer;
     }
 
-    /* Horizontal Category Scroll */
     .cat-scroll {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding: 12px 16px;
-      background: #fff;
-      border-bottom: 1px solid #edf2f7;
-      scrollbar-width: none;
+      display: flex; gap: 10px; overflow-x: auto; padding: 12px 16px;
+      background: #fff; border-bottom: 1px solid #edf2f7; scrollbar-width: none;
     }
-    .cat-scroll::-webkit-scrollbar { display: none; }
     .cat-pill {
-      background: #f1f5f9;
-      padding: 6px 16px;
-      border-radius: 16px;
-      white-space: nowrap;
-      font-size: 13px;
-      font-weight: 500;
-      color: #475569;
-      cursor: pointer;
-      border: 1px solid transparent;
+      background: #f1f5f9; padding: 6px 16px; border-radius: 16px;
+      white-space: nowrap; font-size: 13px; font-weight: 500; color: #475569; cursor: pointer;
     }
-    .cat-pill.active {
-      background: #00875a;
-      color: white;
-    }
+    .cat-pill.active { background: #00875a; color: white; }
 
-    /* Container Area */
     .main-container { padding: 16px; max-width: 800px; margin: 0 auto; }
 
-    /* Promo Banners */
-    .banner {
-      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    }
-    .banner-text h3 { font-size: 18px; color: #166534; margin-bottom: 4px; }
-    .banner-text p { font-size: 13px; color: #15803d; }
-    .banner-badge {
-      background: #00875a;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 600;
+    .track-box {
+      background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 12px; padding: 14px; margin-bottom: 20px;
     }
 
-    /* Category Grid */
-    .section-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: #1e293b;
-    }
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-    .cat-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 12px;
-      text-align: center;
-      border: 1px solid #f1f5f9;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    }
-    .cat-card img {
-      width: 100%;
-      height: 60px;
-      object-fit: contain;
-      margin-bottom: 6px;
-    }
-    .cat-card span { font-size: 12px; font-weight: 600; color: #334155; }
-
-    /* Products Grid */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
+    .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
     .p-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 12px;
-      border: 1px solid #f1f5f9;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      background: #fff; border-radius: 14px; padding: 12px; border: 1px solid #f1f5f9;
+      display: flex; flex-direction: column; justify-content: space-between;
     }
-    .p-card img {
-      width: 100%;
-      height: 120px;
-      object-fit: contain;
-      margin-bottom: 8px;
-    }
-    .p-title { font-size: 13px; font-weight: 600; color: #1e293b; margin-bottom: 4px; height: 36px; overflow: hidden; }
-    .p-price { font-size: 15px; font-weight: 700; color: #00875a; margin-bottom: 8px; }
-    .add-btn {
-      background: #00875a;
-      color: white;
-      border: none;
-      padding: 8px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      width: 100%;
-    }
+    .p-card img { width: 100%; height: 110px; object-fit: contain; margin-bottom: 8px; }
+    .p-title { font-size: 13px; font-weight: 600; color: #1e293b; height: 36px; overflow: hidden; }
+    .p-price { font-size: 15px; font-weight: 700; color: #00875a; margin: 6px 0; }
+    .add-btn { background: #00875a; color: white; border: none; padding: 8px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; }
 
-    /* Checkout & Cart Box */
-    .cart-box {
-      background: white;
-      padding: 18px;
-      border-radius: 16px;
-      margin-top: 30px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-    }
-    .cart-box input {
-      width: 100%;
-      padding: 11px;
-      margin: 6px 0 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 13px;
-      outline: none;
-    }
-    .submit-btn {
-      background: #00875a;
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      width: 100%;
-      font-size: 15px;
-    }
+    .cart-box { background: white; padding: 18px; border-radius: 16px; margin-top: 30px; border: 1px solid #e2e8f0; }
+    .cart-box input { width: 100%; padding: 10px; margin: 6px 0 12px; border: 1px solid #cbd5e1; border-radius: 8px; }
+    .submit-btn { background: #00875a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; }
   </style>
 </head>
 <body>
 
-  <!-- Header Section -->
   <header>
     <div class="nav-top">
       <div class="logo">🛒 SUNNO STORE</div>
@@ -226,59 +68,37 @@
     </div>
     <div class="search-box">
       <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Search products, brands...">
+      <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Search products...">
     </div>
   </header>
 
-  <!-- Categories Scroll Pill -->
-  <div class="cat-scroll">
-    <div class="cat-pill active" onclick="filterCategory('All')">All Products</div>
-    <div class="cat-pill" onclick="filterCategory('Food Basics')">Food Basics</div>
-    <div class="cat-pill" onclick="filterCategory('Fresh')">Fresh</div>
-    <div class="cat-pill" onclick="filterCategory('Household')">Household</div>
-    <div class="cat-pill" onclick="filterCategory('Personal Care')">Personal Care</div>
+  <!-- Auto Dynamic Categories -->
+  <div class="cat-scroll" id="categoryContainer">
+    <div class="cat-pill active" onclick="filterCategory('All')">All</div>
   </div>
 
   <div class="main-container">
 
-    <!-- Promo Banner -->
-    <div class="banner">
-      <div class="banner-text">
-        <h3>Online Exclusive</h3>
-        <p>Best Deals & Fresh Grocery Delivered</p>
+    <!-- Order Track Box -->
+    <div class="track-box">
+      <h4 style="color:#0369a1; margin-bottom:6px;">📍 Track Your Order Status</h4>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="trackPhone" placeholder="Enter Mobile Number" style="flex:1; padding:8px; border-radius:6px; border:1px solid #93c5fd; outline:none;">
+        <button onclick="trackOrder()" style="background:#0284c7; color:white; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600;">Check</button>
       </div>
-      <div class="banner-badge">Deals Up to 30%</div>
-    </div>
-
-    <!-- Shop By Category Grid -->
-    <div class="section-title">Shop By Category</div>
-    <div class="cat-grid">
-      <div class="cat-card" onclick="filterCategory('Food Basics')">
-        <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=150" alt="Food">
-        <span>Food Basics</span>
-      </div>
-      <div class="cat-card" onclick="filterCategory('Fresh')">
-        <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=150" alt="Fresh">
-        <span>Fresh Fruits</span>
-      </div>
-      <div class="cat-card" onclick="filterCategory('Household')">
-        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=150" alt="Household">
-        <span>Household</span>
-      </div>
+      <div id="trackResult" style="margin-top:10px; font-size:13px;"></div>
     </div>
 
     <!-- Products List -->
-    <div class="section-title">Featured Products</div>
+    <h3 style="color:#1e293b;">Featured Products</h3>
     <div class="product-grid" id="productContainer">Loading products...</div>
 
-    <!-- Checkout / Cart Box -->
+    <!-- Cart Box -->
     <div class="cart-box" id="checkoutSection">
-      <h3 style="margin-bottom:12px; color:#1e293b;">🛒 Order & Checkout</h3>
-      <div id="cartList" style="margin-bottom:12px; font-size:14px; color:#64748b;">Cart is empty.</div>
-      <h4 style="font-size:16px; margin-bottom:15px; color:#00875a;">Total: SAR <span id="totalBill">0.00</span></h4>
+      <h3>🛒 Checkout</h3>
+      <div id="cartList" style="margin:10px 0; color:#64748b;">Cart is empty.</div>
+      <h4 style="color:#00875a; margin-bottom:12px;">Total: SAR <span id="totalBill">0.00</span></h4>
       
-      <hr style="margin: 15px 0; border:0; border-top:1px solid #e2e8f0;">
-      <h4 style="margin-bottom:8px; font-size:14px; color:#334155;">Customer Information:</h4>
       <input type="text" id="custName" placeholder="Your Full Name">
       <input type="text" id="custPhone" placeholder="Mobile Number">
       <input type="text" id="custAddress" placeholder="Delivery Address">
@@ -294,26 +114,30 @@
     let cart = [];
 
     async function fetchProducts() {
-      const container = document.getElementById('productContainer');
       try {
-        let res = await fetch(`${API_URL}/api/products`);
-        if (!res.ok) res = await fetch(`${API_URL}/products`);
-        
+        const res = await fetch(`${API_URL}/api/products`);
         if (res.ok) {
           allProducts = await res.json();
+          renderCategories();
           renderProducts(allProducts);
-        } else {
-          container.innerHTML = '<p style="grid-column: 1/-1;">No products found.</p>';
         }
       } catch(err) {
-        container.innerHTML = '<p style="color:red; grid-column: 1/-1;">Connecting to server...</p>';
+        document.getElementById('productContainer').innerHTML = 'Connecting to server...';
       }
+    }
+
+    function renderCategories() {
+      const categories = ['All', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
+      const container = document.getElementById('categoryContainer');
+      container.innerHTML = categories.map((c, i) => `
+        <div class="cat-pill ${i===0?'active':''}" onclick="filterCategory('${c}', this)">${c}</div>
+      `).join('');
     }
 
     function renderProducts(list) {
       const container = document.getElementById('productContainer');
       if (!list || list.length === 0) {
-        container.innerHTML = '<p style="grid-column: 1/-1;">No products available in this category.</p>';
+        container.innerHTML = '<p style="grid-column: 1/-1;">No products found.</p>';
         return;
       }
 
@@ -322,27 +146,24 @@
           <img src="${p.image || 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300'}" alt="${p.name}">
           <div class="p-title">${p.name}</div>
           <div class="p-price">SAR ${p.price}</div>
-          <button class="add-btn" onclick="addToCart('${p._id}', '${p.name}', ${p.price})">+ Add to Cart</button>
+          <button class="add-btn" onclick="addToCart('${p._id}', '${p.name}', ${p.price})">+ Add</button>
         </div>
       `).join('');
     }
 
-    function filterCategory(cat) {
-      document.querySelectorAll('.cat-pill').forEach(el => el.classList.remove('active'));
-      event.target.classList.add('active');
-
-      if (cat === 'All') {
-        renderProducts(allProducts);
-      } else {
-        const filtered = allProducts.filter(p => p.category && p.category.toLowerCase().includes(cat.toLowerCase()));
-        renderProducts(filtered);
+    function filterCategory(cat, el) {
+      if(el) {
+        document.querySelectorAll('.cat-pill').forEach(e => e.classList.remove('active'));
+        el.classList.add('active');
       }
+
+      if (cat === 'All') renderProducts(allProducts);
+      else renderProducts(allProducts.filter(p => p.category === cat));
     }
 
     function filterProducts() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
-      renderProducts(filtered);
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      renderProducts(allProducts.filter(p => p.name.toLowerCase().includes(q)));
     }
 
     function addToCart(id, name, price) {
@@ -362,13 +183,35 @@
       } else {
         list.innerHTML = cart.map(i => {
           total += i.price * i.qty;
-          return `<div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-            <span><b>${i.name}</b> (x${i.qty})</span>
-            <span>SAR ${(i.price * i.qty).toFixed(2)}</span>
-          </div>`;
+          return `<div><b>${i.name}</b> x ${i.qty} - SAR ${(i.price * i.qty).toFixed(2)}</div>`;
         }).join('');
       }
       document.getElementById('totalBill').innerText = total.toFixed(2);
+    }
+
+    async function trackOrder() {
+      const phone = document.getElementById('trackPhone').value;
+      const resDiv = document.getElementById('trackResult');
+      if(!phone) { alert('Please enter phone number'); return; }
+
+      resDiv.innerHTML = 'Searching...';
+      try {
+        const res = await fetch(`${API_URL}/api/orders/track/${phone}`);
+        const orders = await res.json();
+        
+        if(!orders || orders.length === 0) {
+          resDiv.innerHTML = '<b style="color:red;">No orders found for this number.</b>';
+          return;
+        }
+
+        resDiv.innerHTML = orders.map(o => `
+          <div style="background:white; padding:8px; border-radius:6px; margin-top:6px; border:1px solid #cbd5e1;">
+            <div><b>Order ID:</b> #${o._id.slice(-6)}</div>
+            <div><b>Status:</b> <span style="color:#0284c7; font-weight:bold;">${o.status}</span></div>
+            <div><b>Total:</b> SAR ${o.totalAmount}</div>
+          </div>
+        `).join('');
+      } catch(err) { resDiv.innerHTML = 'Error tracking order.'; }
     }
 
     async function submitOrder() {
@@ -377,27 +220,18 @@
       const address = document.getElementById('custAddress').value;
 
       if(!name || !phone || cart.length === 0) {
-        alert('Please enter Name, Mobile Number and add items to cart!');
+        alert('Please fill out Name, Phone and Add Items!');
         return;
       }
 
       const totalAmount = parseFloat(document.getElementById('totalBill').innerText);
-      const payload = { customerName: name, phone, address, items: cart, totalAmount };
 
       try {
-        let res = await fetch(`${API_URL}/api/orders`, {
+        const res = await fetch(`${API_URL}/api/orders`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({ customerName: name, phone, address, items: cart, totalAmount })
         });
-
-        if(!res.ok) {
-          res = await fetch(`${API_URL}/orders`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-        }
 
         if(res.ok) {
           alert('🎉 Order Placed Successfully!');
@@ -406,12 +240,8 @@
           document.getElementById('custPhone').value = '';
           document.getElementById('custAddress').value = '';
           updateCartUI();
-        } else {
-          alert('Failed to place order.');
         }
-      } catch(err) {
-        alert('Network Error. Please try again.');
-      }
+      } catch(err) { alert('Error placing order.'); }
     }
 
     fetchProducts();
