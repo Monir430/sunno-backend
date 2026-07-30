@@ -56,14 +56,12 @@
   </div>
 
   <script>
-    // পাসওয়ার্ড চেক কোড
     const password = prompt("Enter Admin Password:");
     if (password !== "shanta") { 
         alert("Wrong Password!");
         window.location.href = "index.html";
     }
 
-    // ব্যাকএন্ডের মূল API URL
     const API_URL = 'https://sunno-backend.onrender.com';
 
     async function addProduct() {
@@ -78,12 +76,22 @@
         return;
       }
 
+      const payload = { name, price: Number(price), category, stock: Number(stock), image };
+
       try {
-        const res = await fetch(`${API_URL}/api/products`, {
+        let res = await fetch(`${API_URL}/api/products`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, price: Number(price), category, stock: Number(stock), image })
+          body: JSON.stringify(payload)
         });
+
+        if (!res.ok) {
+          res = await fetch(`${API_URL}/products`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
 
         if(res.ok) {
           alert('New Product Added Successfully!');
@@ -97,11 +105,17 @@
     }
 
     async function loadOrders() {
+      const tbody = document.getElementById('ordersTable');
+      let orders = null;
+
       try {
-        const res = await fetch(`${API_URL}/api/orders`);
-        const orders = await res.json();
+        let res = await fetch(`${API_URL}/api/orders`);
+        if(res.ok) orders = await res.json();
+        else {
+          res = await fetch(`${API_URL}/orders`);
+          if(res.ok) orders = await res.json();
+        }
         
-        const tbody = document.getElementById('ordersTable');
         if(!orders || orders.length === 0) {
           tbody.innerHTML = '<tr><td colspan="5">No orders found yet.</td></tr>';
           return;
@@ -117,7 +131,7 @@
           </tr>
         `).join('');
       } catch(err) {
-        document.getElementById('ordersTable').innerHTML = '<tr><td colspan="5">Connecting to server...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="color:red;">Failed to connect to server.</td></tr>';
       }
     }
 
